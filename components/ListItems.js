@@ -1,6 +1,7 @@
 import { FlatList, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { FormItem } from "./FormItem";
+import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 
 export const ListItems = () => {
 	const [listItemOfText, setListItemOfText] = useState([
@@ -21,14 +22,30 @@ export const ListItems = () => {
 		})
 	}
 
+	const leftSwipe = () => {
+		return (
+			<View>
+				<Text>delete</Text>
+			</View>
+		)
+	}
+
 	return (
 		<View>
 			<FormItem addNotes={addNotes}/>
-			<FlatList data={listItemOfText} renderItem={({item}) => (
-				<TouchableOpacity onPress={() => deleteNotes(item.key)}>
-					<Text style={styles.text}>{item.text}</Text>
-				</TouchableOpacity>
-			)}/>
+			<FlatList
+				data={listItemOfText}
+				renderItem={({item}) => (
+					<GestureHandlerRootView>
+						<Swipeable renderLeftActions={leftSwipe}>
+							<TouchableOpacity onPress={() => deleteNotes(item.key)}>
+								<Text style={styles.text}>{item.text}</Text>
+							</TouchableOpacity>
+						</Swipeable>
+					</GestureHandlerRootView>
+			)}
+			ItemSeparatorComponent={() => <View style={styles.separator}></View> }
+			/>
 		</View>
 	)
 }
@@ -49,5 +66,5 @@ const styles = StyleSheet.create({
 		marginTop: 8,
 		width: '70%',
 		marginLeft: '15%',
-	}
+	},
 });

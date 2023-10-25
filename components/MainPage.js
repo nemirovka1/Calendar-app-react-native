@@ -1,9 +1,12 @@
 import { Text, StyleSheet, View, Button } from "react-native";
 import WebView from 'react-native-webview';
+import { useSelector } from "react-redux";
+import { selectNotesList } from "./store/selectors";
 
 export const MainPage = ({navigation}) => {
+	const listNotes = useSelector(selectNotesList)
+
 	const openWebView = () => {
-		console.log(1)
 		return (
 			<WebView source={{ uri: 'https://djinni.co/jobs/my/' }} />
 		);
@@ -11,9 +14,15 @@ export const MainPage = ({navigation}) => {
 	return (
 		<View>
 			<Text style={styles.text}>This is First Page</Text>
+			{(listNotes || []).map((el) => (
+				<View>
+					<Text>{el.title}</Text>
+					<Text>{el.description}</Text>
+				</View>
+			))}
 			<Button title={'Open Notes'} onPress={()=> navigation.navigate('Home')}/>
-			<Button title={'Open Weather'} onPress={()=> navigation.navigate('Weather')}/>
 			<Button title={'Open Calendar'} onPress={()=> navigation.navigate('Calendar')}/>
+			<Button title={ 'Main'} onPress={()=> navigation.navigate('Main')}/>
 			<View>
 				<Button title="Открыть внутренний браузер" onPress={openWebView} />
 			</View>

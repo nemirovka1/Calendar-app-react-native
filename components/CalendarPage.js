@@ -6,44 +6,65 @@ import {
 	Text,
 	Modal,
 	Button,
-	TextInput,
+	TextInput, ImageBackground, TouchableOpacity,
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { ModalContent } from "./modal/ModalContent";
-import { getCurrentDay } from "./helpers/helpers";
+import { footerComponent, formatDate, formatDateMarket, getCurrentDay } from "./helpers/helpers";
+import { useSelector } from "react-redux";
+import { selectNotesList } from "./store/selectors";
 
 export function CustomCalendar(props) {
+	const listNotes = useSelector(selectNotesList)
 	const [selected, setSelected] = useState(getCurrentDay());
 
-	const marked = useMemo(() => ({
-		[selected]: {
-			customStyles: {
-				container: {
-					backgroundColor: 'green',
-					borderRadius: 0,
+	const marked = useMemo(() => {
+		return listNotes.reduce((markedDates, el) => {
+			markedDates[selected] = {
+				customStyles: {
+					container: {
+						backgroundColor: 'purple',
+						borderRadius: 10,
+						alignSelf: 'center',
+					},
+					text: {
+						color: 'white',
+					},
 				},
-				text: {
-					color: 'white',
-				}
-			}
-		}
-	}), [selected]);
+			};
+			markedDates[formatDateMarket(el.startDate)] = {
+				marked: true,
+				color: 'red', selectedDotColor: 'reds'
+			};
+			return markedDates;
+		}, {});
+	}, [selected]);
 
 	return (
 		<View>
 			<Calendar
 				initialDate={getCurrentDay()}
-				markingType="custom"
-				markedDates={marked}
 				onDayPress={(day) => {
 					setSelected(day.dateString);
 					props.onDaySelect && props.onDaySelect(day);
 				}}
+				markedDates={marked}
+				markingType={'custom'}
+				theme={{
+					backgroundColor: '#D8DEF3',
+					calendarBackground: '#f5f2f2',
+					textSectionTitleColor: 'purple',
+					textDayFontSize: 18,
+					textMonthFontSize: 25,
+					arrowColor: 'purple',
+				}}
 				style={{
 					borderRadius: 10,
 					margin: 12,
-					borderWidth: 1,
-					borderColor: 'rgba(5, 5, 100, 0.2)',
+					padding: 12,
+					borderWidth: 0,
+					fontSize: 10,
+					border: 'none',
 				}}
 				{...props}
 			/>
@@ -61,13 +82,26 @@ export default function CalendarPage({ navigation }) {
 	};
 
 	return (
-		<SafeAreaView style={styles.container}>
-			<Text style={styles.text}>- Calendar -</Text>
-			<Button title={'Add Notes'} onPress={()=> setModalVisible(true)}/>
-			<View style={styles.calendarContainer}>
-				<CustomCalendar onDaySelect={(day) => console.log(`Date selected: ${day.dateString}`)}
-				/>
-			</View>
+		<SafeAreaView style={styles.box}>
+			<ImageBackground
+				style={styles.backgroundImg}
+				source={require('./assets/CalendarBacground.png')}
+			>
+				<View style={styles.container}>
+					<Text style={styles.text}> Calendar </Text>
+					<View style={styles.calendarContainer}>
+						<CustomCalendar onDaySelect={(day) => console.log(`Date selected: ${day.dateString}`)}
+						/>
+					</View>
+				</View>
+			</ImageBackground>
+			<TouchableOpacity
+				onPress={()=> setModalVisible(true)}
+				style={styles.btnContainer}
+			>
+				<Text style={styles.createBtnText}>Create Task</Text>
+			</TouchableOpacity>
+			{footerComponent(navigation)}
 			<Modal
 				animationType="slide"
 				transparent={isModalVisible}
@@ -81,18 +115,33 @@ export default function CalendarPage({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+	box: {
+		width: '100%',
+		height: '95%',
+		display: 'flex',
+		alignItems: 'center',
+	},
+	backgroundImg: {
+		display: 'flex',
+		width: '100%',
+		height: '85%',
+		alignItems: 'center',
+	},
 	container: {
-		flex: 1,
-		backgroundColor: '#0a8faf',
+		display: 'flex',
+		alignItems: 'center',
 	},
 	text: {
 		textAlign: 'center',
-		fontSize: 30,
+		fontSize: 42,
+		fontWeight: "bold",
 		color: 'white',
 		marginTop: 35,
 	},
 	calendarContainer: {
-		flex: 2,
+		width: 420,
+		marginTop: 30,
+		borderRadius: 28,
 		justifyContent: 'center',
 	},
 	todayButton: {
@@ -102,12 +151,28 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	modal: {
-		marginTop: 70,
+		// marginTop: 70,
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: '100%',
 		height: '100%',
 		backgroundColor: '#413a39',
 	},
+	btnContainer: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 50,
+		marginBottom: 20,
+		backgroundColor: '#6435f5',
+		width: 350,
+		height: 60,
+	},
+	createBtnText: {
+		textAlign: 'center',
+		fontSize: 22,
+		fontWeight: 500,
+		color: 'white',
+	}
 });
 
