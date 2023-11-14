@@ -30,6 +30,13 @@ export const ListItems = () => {
 		)
 	}
 
+	const rightSwipe = () => {
+		return (
+			<View>
+				<Text>delete</Text>
+			</View>
+		)
+	}
 	return (
 		<View>
 			<FormItem addNotes={addNotes}/>
@@ -38,6 +45,11 @@ export const ListItems = () => {
 				renderItem={({item}) => (
 					<GestureHandlerRootView>
 						<Swipeable renderLeftActions={leftSwipe}>
+							<TouchableOpacity onPress={() => deleteNotes(item.key)}>
+								<Text style={styles.text}>{item.text}</Text>
+							</TouchableOpacity>
+						</Swipeable>
+						<Swipeable renderRightActions={rightSwipe} >
 							<TouchableOpacity onPress={() => deleteNotes(item.key)}>
 								<Text style={styles.text}>{item.text}</Text>
 							</TouchableOpacity>

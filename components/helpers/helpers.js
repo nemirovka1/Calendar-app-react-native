@@ -18,6 +18,7 @@ import { ModalContent } from "../modal/ModalContent";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { setNotesList } from "../store/slice";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export const getCurrentDay = () => {
 	const today = new Date();
@@ -40,7 +41,6 @@ export const formatDateMarket = (inputDateStr) => {
 	const year = inputDate.getFullYear();
 	const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
 	const day = inputDate.getDate().toString().padStart(2, '0');
-
 	return `${year}-${month}-${day}`;
 }
 export const formatTime = (currentDate) => {
@@ -58,24 +58,30 @@ export const footerComponent = (navigation) => {
 	return (
 		<View style={{
 			position: 'absolute',
-			bottom: 7,
+			bottom: 2,
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
 			flexDirection: 'row',
-			gap: 80,
+			gap: 50,
 		}}>
 			<TouchableOpacity onPress={() => navigation.navigate('Main')}>
 				<Image source={
 					currentRouteName === 'Main'?
 						require('../assets/home_alt_fill.png')
-						: require('../assets/home-icon.png') } style={{width: 40, height: 40}}/>
+						: require('../assets/home-icon.png') } style={{width: 50, height: 50}}/>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={()=> navigation.navigate('Calendar')}>
 				<Image source={currentRouteName === 'Calendar'?
-					require('../assets/cal.png')
-					: require('../assets/calendar.png')
+					require('../assets/calendar-selecteed.png')
+					: require('../assets/calendar-gray.png')
 				} style={{width: 40, height: 40}}/>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={()=> navigation.navigate('Weather')}>
+				<Image source={currentRouteName === 'Weather'?
+					require('../assets/iselected-clouds.png')
+					: require('../assets/gray-cloud.png')
+				} style={{width: 50, height: 50}}/>
 			</TouchableOpacity>
 		</View>
 	)
@@ -85,6 +91,7 @@ export const renderListNotes = (listNotes) => {
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [modalId, setModalId] = useState(null)
 	const dispatch = useDispatch()
+	const { t } = useTranslation()
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible)
 	};
@@ -109,6 +116,12 @@ export const renderListNotes = (listNotes) => {
 				<TouchableOpacity style={styles.swipeBoxDelete} onPress={() => handleDeleteTask(id)}>
 					<Icon name="trash" size={24} color={'white'}/>
 				</TouchableOpacity>
+			</View>
+		)
+	}
+	const rightSwipe = (id) => {
+		return (
+			<View style={styles.swipeContainer}>
 				<TouchableOpacity style={styles.swipeBoxEdit} onPress={() => handleModalOpen(id)}>
 					<Icon name="edit" size={24} color={'white'}/>
 				</TouchableOpacity>
@@ -121,12 +134,16 @@ export const renderListNotes = (listNotes) => {
 			<ScrollView>
 				{listNotes.map((el, id) => (
 					<GestureHandlerRootView>
-						<Swipeable renderLeftActions={() => leftSwipe(el.id)}>
+						<Swipeable
+							friction={1}
+							useNativeDriver={true}
+							renderRightActions={()=> rightSwipe(el.id)}
+							renderLeftActions={() => leftSwipe(el.id)}>
 							<TouchableOpacity style={styles.listCard} key={id}>
 								<View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
 									<Image source={require('../assets/Card.png')} style={{width: 50, height: 50}}/>
 									<View style={styles.listInfo}>
-										<Text style={styles.listInfoText}>{el.title}</Text>
+										<Text style={styles.listInfoText}>{t(el.title)}</Text>
 										<Text style={styles.listInfoDate}>{formatDate(el.startDate)}</Text>
 									</View>
 								</View>
@@ -292,21 +309,23 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		width: '45%',
+		width: '80%',
 		borderRadius: 10,
 		marginTop: 10,
 	},
 	swipeBoxDelete: {
 		display: 'flex',
 		backgroundColor: 'red',
-		width: '50%',
+		borderRadius: 10,
+		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	swipeBoxEdit: {
 		display: 'flex',
 		backgroundColor: '#6129a9',
-		width: '50%',
+		width: '100%',
+		borderRadius: 10,
 		justifyContent: 'center',
 		alignItems: 'center',
 	}

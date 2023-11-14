@@ -13,6 +13,7 @@ import { ModalContent } from "./modal/ModalContent";
 import { footerComponent, formatDate, formatDateMarket, getCurrentDay } from "./helpers/helpers";
 import { useSelector } from "react-redux";
 import { selectNotesList } from "./store/selectors";
+import { useTranslation } from "react-i18next";
 
 export function CustomCalendar(props) {
 	const listNotes = useSelector(selectNotesList)
@@ -76,6 +77,7 @@ export default function CalendarPage({ navigation }) {
 	const [selectedDate, setSelectedDate] = useState(getCurrentDay());
 	const [isModalVisible, setModalVisible] = useState(false)
 	const calendarRef = useRef(null);
+	const { t } = useTranslation()
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible)
@@ -88,7 +90,7 @@ export default function CalendarPage({ navigation }) {
 				source={require('./assets/CalendarBacground.png')}
 			>
 				<View style={styles.container}>
-					<Text style={styles.text}> Calendar </Text>
+					<Text style={styles.text}> {t("Calendar")}</Text>
 					<View style={styles.calendarContainer}>
 						<CustomCalendar onDaySelect={(day) => console.log(`Date selected: ${day.dateString}`)}
 						/>
@@ -99,7 +101,7 @@ export default function CalendarPage({ navigation }) {
 				onPress={()=> setModalVisible(true)}
 				style={styles.btnContainer}
 			>
-				<Text style={styles.createBtnText}>Create Task</Text>
+				<Text style={styles.createBtnText}>{t("Create Task")}</Text>
 			</TouchableOpacity>
 			{footerComponent(navigation)}
 			<Modal
@@ -117,7 +119,7 @@ export default function CalendarPage({ navigation }) {
 const styles = StyleSheet.create({
 	box: {
 		width: '100%',
-		height: '95%',
+		height: '97%',
 		display: 'flex',
 		alignItems: 'center',
 	},
@@ -151,7 +153,6 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	modal: {
-		// marginTop: 70,
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: '100%',
@@ -163,7 +164,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 50,
-		marginBottom: 20,
 		backgroundColor: '#6435f5',
 		width: 350,
 		height: 60,

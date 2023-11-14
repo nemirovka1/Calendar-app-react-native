@@ -11,7 +11,6 @@ export const EditCreatedTask = ({navigation}) => {
 	const listNotes = useSelector(selectNotesList)
 	const filterListNotes = listNotes.filter((el) => el.id === id)
 
-	console.log({filterListNotes})
 	return (
 		<View>
 			<Text> Edit</Text>

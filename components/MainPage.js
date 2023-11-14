@@ -6,11 +6,6 @@ import { selectNotesList } from "./store/selectors";
 export const MainPage = ({navigation}) => {
 	const listNotes = useSelector(selectNotesList)
 
-	const openWebView = () => {
-		return (
-			<WebView source={{ uri: 'https://djinni.co/jobs/my/' }} />
-		);
-	};
 	return (
 		<View>
 			<Text style={styles.text}>This is First Page</Text>
@@ -23,9 +18,6 @@ export const MainPage = ({navigation}) => {
 			<Button title={'Open Notes'} onPress={()=> navigation.navigate('Home')}/>
 			<Button title={'Open Calendar'} onPress={()=> navigation.navigate('Calendar')}/>
 			<Button title={ 'Main'} onPress={()=> navigation.navigate('Main')}/>
-			<View>
-				<Button title="Открыть внутренний браузер" onPress={openWebView} />
-			</View>
 		</View>
 	);
 };

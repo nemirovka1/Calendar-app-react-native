@@ -14,12 +14,14 @@ import { Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotesList } from "../store/slice";
 import { selectNotesList } from "../store/selectors";
+import { useTranslation } from "react-i18next";
 
 export const ModalContent = ({closeModal, id, editTask}) => {
 	const listNotes = useSelector(selectNotesList)
 	const dispatch = useDispatch()
 	const [eventType, setEventType] = useState('');
 	const [isOpen, setIsOpen] = useState(false);
+	const { t } = useTranslation()
 
 	let initialValues;
 	if (id) {
@@ -59,7 +61,6 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 
 	const handleSubmit = (values) => {
 		if (id) {
-			console.log({id})
 			updateNote(id, values);
 		} else {
 			const newNote = { ...values, id: Math.random(), eventType: eventType };
@@ -97,22 +98,22 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									<View style={{width: '100%', padding: 20}}>
 										<View style={styles.managementBtn}>
 											<TouchableOpacity onPress={closeModal}>
-												<Text style={styles.btnTitle}>Cancel</Text>
+												<Text style={styles.btnTitle}>{t("Cancel")}</Text>
 											</TouchableOpacity>
 										</View>
-										<Text style={styles.modalTitle}>{editTask? 'Edit Task' : 'Create Task'}</Text>
+										<Text style={styles.modalTitle}>{editTask? t("Edit Task") : t("Create Task")}</Text>
 										<SafeAreaView style={styles.modalSection} >
 											<View style={styles.dropdownGender}>
-												<Text style={styles.textInputLabel}>Category</Text>
+												<Text style={styles.textInputLabel}>{ t( "Category" ) }</Text>
 												<DropDownPicker
 													style={styles.picker}
 													open={isOpen}
 													setOpen={toggleOpen}
 													value={eventType}
 													items={[
-														{ label: 'Home', value: 'home', color: 'green' },
-														{ label: 'Work', value: 'work', color: 'orange' },
-														{ label: 'University', value: 'university', color: 'red' },
+														{ label: t('Home'), value: 'home', color: 'green' },
+														{ label: t('Work'), value: 'work', color: 'orange' },
+														{ label: t('University'), value: 'university', color: 'red' },
 													]}
 													customItemContainerStyle={{
 														backgroundColor: 'red',
@@ -123,18 +124,18 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 														fontSize: 16,
 													}}
 													topOffset={null}
-													placeholder="Choose category"
+													placeholder={t( "Choose category" )}
 												/>
 											</View>
 											<SafeAreaView style={styles.modalContent}>
-												<Text style={styles.textInputLabel}>Name</Text>
+												<Text style={styles.textInputLabel}>{t("Name")}</Text>
 												<TextInput
 													style={styles.textInput}
 													onChangeText={handleChange('title')}
 													onBlur={handleBlur('title')}
 													value={values.title}
 													placeholderTextColor={'white'}
-													placeholder="Title"
+													placeholder={ t("Title")}
 												/>
 												<View style={styles.separator} />
 											</SafeAreaView>
@@ -145,7 +146,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 							<View style={styles.modalSectionTime}>
 								<SafeAreaView style={{ gap: 20 }}>
 									<TouchableOpacity style={styles.dateBox}>
-										<Text style={styles.dateText}>Starts</Text>
+										<Text style={styles.dateText}>{t("Starts")}</Text>
 											<SafeAreaView style={styles.timeBox}>
 												<DateTimePicker
 													testID="startDateTimePicker"
@@ -165,7 +166,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									</TouchableOpacity>
 									<View style={styles.separator} />
 									<TouchableOpacity style={styles.dateBox}>
-										<Text style={styles.dateText}>Ends</Text>
+										<Text style={styles.dateText}>{t("Ends")}</Text>
 										<SafeAreaView style={styles.timeBox}>
 											<DateTimePicker
 												testID="endDateTimePicker"
@@ -185,21 +186,21 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									</TouchableOpacity>
 									</SafeAreaView>
 								<View style={{marginTop: 50}}>
-									<Text style={{color: '#182965', fontSize: 18, marginBottom: 12}}>Description</Text>
+									<Text style={{color: '#182965', fontSize: 18, marginBottom: 12}}>{t("Description")}</Text>
 									<TextInput
 										style={styles.textInput}
 										onChangeText={handleChange('description')}
 										onBlur={handleBlur('description')}
 										value={values.description}
 										placeholderTextColor={'#2E3A59'}
-										placeholder="Write your description here, please!"
+										placeholder={t("DescText")}
 									/>
 								</View>
 									<TouchableOpacity
 										onPress={handleSubmit}
 										style={styles.btnContainer}
 									>
-											<Text style={styles.createBtnText}>{editTask? 'Update Task' : 'Add Task'}</Text>
+											<Text style={styles.createBtnText}>{editTask? t('Update Task') : t('Add Task')}</Text>
 									</TouchableOpacity>
 							</View>
 						</View>
