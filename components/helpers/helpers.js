@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { CheckBox } from "react-native-elements";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { ModalContent } from "../modal/ModalContent";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
@@ -92,6 +92,7 @@ export const renderListNotes = (listNotes) => {
 	const [modalId, setModalId] = useState(null)
 	const dispatch = useDispatch()
 	const { t } = useTranslation()
+
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible)
 	};

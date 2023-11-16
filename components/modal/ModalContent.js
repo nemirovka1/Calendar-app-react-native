@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 	View
 } from "react-native";
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Formik } from "formik";
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setNotesList } from "../store/slice";
 import { selectNotesList } from "../store/selectors";
 import { useTranslation } from "react-i18next";
+import { ThemeContext } from "../theme/ThemeContext";
 
 export const ModalContent = ({closeModal, id, editTask}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -22,6 +23,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 	const [eventType, setEventType] = useState('');
 	const [isOpen, setIsOpen] = useState(false);
 	const { t } = useTranslation()
+	const { theme } = useContext(ThemeContext);
 
 	let initialValues;
 	if (id) {
@@ -44,17 +46,13 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 
 	const updateNote = (id, updatedValues) => {
 		const index = listNotes.findIndex((el) => el.id === id);
-
 		if (index !== -1) {
 			const updatedNote = {
 				...listNotes[index],
 				...updatedValues,
 			};
-
 			const updatedListNotes = [...listNotes];
 			updatedListNotes[index] = updatedNote;
-			console.log({updatedNote})
-
 			dispatch(setNotesList(updatedListNotes));
 		}
 	};
@@ -104,7 +102,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 										<Text style={styles.modalTitle}>{editTask? t("Edit Task") : t("Create Task")}</Text>
 										<SafeAreaView style={styles.modalSection} >
 											<View style={styles.dropdownGender}>
-												<Text style={styles.textInputLabel}>{ t( "Category" ) }</Text>
+												<Text style={styles.textInputLabel}>{t("Category")}</Text>
 												<DropDownPicker
 													style={styles.picker}
 													open={isOpen}
@@ -143,10 +141,10 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									</View>
 								</SafeAreaView>
 							</ImageBackground>
-							<View style={styles.modalSectionTime}>
+							<View style={[styles.modalSectionTime, { backgroundColor: theme.backgroundColor }]}>
 								<SafeAreaView style={{ gap: 20 }}>
 									<TouchableOpacity style={styles.dateBox}>
-										<Text style={styles.dateText}>{t("Starts")}</Text>
+										<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Starts")}</Text>
 											<SafeAreaView style={styles.timeBox}>
 												<DateTimePicker
 													testID="startDateTimePicker"
@@ -166,7 +164,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									</TouchableOpacity>
 									<View style={styles.separator} />
 									<TouchableOpacity style={styles.dateBox}>
-										<Text style={styles.dateText}>{t("Ends")}</Text>
+										<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Ends")}</Text>
 										<SafeAreaView style={styles.timeBox}>
 											<DateTimePicker
 												testID="endDateTimePicker"
@@ -186,13 +184,13 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									</TouchableOpacity>
 									</SafeAreaView>
 								<View style={{marginTop: 50}}>
-									<Text style={{color: '#182965', fontSize: 18, marginBottom: 12}}>{t("Description")}</Text>
+									<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
 									<TextInput
 										style={styles.textInput}
 										onChangeText={handleChange('description')}
 										onBlur={handleBlur('description')}
 										value={values.description}
-										placeholderTextColor={'#2E3A59'}
+										placeholderTextColor={theme.textColor}
 										placeholder={t("DescText")}
 									/>
 								</View>
@@ -327,5 +325,11 @@ const styles = StyleSheet.create({
 		fontSize: 22,
 		fontWeight: 500,
 		color: 'white',
+	},
+	descriptionText: {
+		color: '#182965',
+		fontSize: 18,
+		marginBottom: 12
 	}
+
 });

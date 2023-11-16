@@ -2,11 +2,13 @@ import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } fr
 import { useRoute } from "@react-navigation/native";
 import { formatDate, renderListNotes } from "../helpers/helpers";
 import { CheckBox } from "react-native-elements";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectNotesList } from "../store/selectors";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { PieChart } from 'react-native-svg-charts'
+import { ThemeContext } from "../theme/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 
 export const EventTypeDetails = ({ navigation }) => {
@@ -14,6 +16,8 @@ export const EventTypeDetails = ({ navigation }) => {
 	const { label } = route.params
 	const listNotes = useSelector(selectNotesList)
 	const filterListNotes = listNotes.filter((el) => el.eventType === label.toLowerCase())
+	const { theme } = useContext(ThemeContext);
+	const { t } = useTranslation()
 
 	const totalEvents = listNotes.length
 	const eventCounts = {};
@@ -35,20 +39,20 @@ export const EventTypeDetails = ({ navigation }) => {
 	const data = [
 		{
 			key: 1,
-			title: 'private',
+			title: t('University'),
 			value: eventPercentage["private"] || 0,
 			svg: { fill: '#6129a9' },
 		},
 		{
 			key: 2,
-			title: "home",
+			title: t("Home"),
 			value: eventPercentage["home"] || 0,
 			svg: { fill: '#55d3a6' },
 
 		},
 		{
 			key: 3,
-			title:"work",
+			title: t("Work"),
 			value: eventPercentage["work"] || 0,
 			svg: { fill: '#d74444' },
 		},
@@ -69,19 +73,21 @@ export const EventTypeDetails = ({ navigation }) => {
 	}, [eventPercentage, listNotes])
 
 	return (
-		<SafeAreaView style={styles.container}>
-			<Text style={styles.title}>{label}</Text>
-			{renderDiagram}
-			<View style={styles.filterContainer}>
-				<Text style={styles.filterText}>Tasks</Text>
-				<TextInput
-					style={styles.filterInput}
-					placeholder="Type Task"
-				/>
-				<Icon name="search" size={18} style={{ position: 'absolute', right: 10, top: 5 }} />
-			</View>
-			<View style={styles.notesContainer}>
-				{renderListNotes(filterListNotes, navigation)}
+		<SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+			<View style={styles.box}>
+				<Text style={[styles.title, { color: theme.textColor }]}>{label}</Text>
+				{renderDiagram}
+				<View style={styles.filterContainer}>
+					<Text style={[styles.filterText, { color: theme.textColor }]}>{t('Tasks')}</Text>
+					<TextInput
+						style={styles.filterInput}
+						placeholder={ t("Type Task")}
+					/>
+					<Icon name="search" size={18} style={{ position: 'absolute', right: 30, top: 5 }} />
+				</View>
+				<View style={styles.notesContainer}>
+					{renderListNotes(filterListNotes, navigation)}
+				</View>
 			</View>
 		</SafeAreaView>
 	)
@@ -91,7 +97,11 @@ const styles = StyleSheet.create({
 	container: {
 		display: "flex",
 		alignItems: 'center',
-		margin: 30,
+	},
+	box: {
+		display: "flex",
+		alignItems: 'center',
+		margin: 20,
 	},
 	title: {
 		fontSize: 32,

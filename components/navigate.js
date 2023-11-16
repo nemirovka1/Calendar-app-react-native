@@ -6,22 +6,26 @@ import CalendarPage from "./CalendarPage";
 import { EventTypeDetails } from "./pages/EventTypeDetails";
 import { WeatherPage } from "./pages/WeatherPage";
 import { LanguageProvider } from "./i18n/LanguageContext";
+import { ThemeProvider } from "./theme/ThemeContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function Navigate () {
 	return (
-		<LanguageProvider>
-			<NavigationContainer>
-				<Stack.Navigator>
-					{/*<Stack.Screen name="Main" component={MainPage} />*/}
-					<Stack.Screen name="Home" component={ListPage} />
-					<Stack.Screen name="Calendar" component={CalendarPage}/>
-					<Stack.Screen name="Main" component={MainPage}/>
-					<Stack.Screen name="DetailsEvent" component={EventTypeDetails}/>
-					<Stack.Screen name="Weather" component={WeatherPage}/>
-				</Stack.Navigator>
-			</NavigationContainer>
-		</LanguageProvider>
+		<NavigationContainer>
+		<ThemeProvider>
+			<LanguageProvider>
+
+					<Stack.Navigator>
+						<Stack.Screen name="Home" component={ListPage} />
+						<Stack.Screen name="Calendar" component={CalendarPage}/>
+						<Stack.Screen name="Main" component={MainPage}/>
+						<Stack.Screen name="DetailsEvent" component={EventTypeDetails}/>
+						<Stack.Screen name="Weather" component={WeatherPage}/>
+					</Stack.Navigator>
+
+			</LanguageProvider>
+		</ThemeProvider>
+		</NavigationContainer>
 	)
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useContext } from 'react';
 import {
 	SafeAreaView,
 	StyleSheet,
@@ -14,6 +14,7 @@ import { footerComponent, formatDate, formatDateMarket, getCurrentDay } from "./
 import { useSelector } from "react-redux";
 import { selectNotesList } from "./store/selectors";
 import { useTranslation } from "react-i18next";
+import { ThemeContext } from "./theme/ThemeContext";
 
 export function CustomCalendar(props) {
 	const listNotes = useSelector(selectNotesList)
@@ -78,40 +79,43 @@ export default function CalendarPage({ navigation }) {
 	const [isModalVisible, setModalVisible] = useState(false)
 	const calendarRef = useRef(null);
 	const { t } = useTranslation()
+	const { theme, toggleTheme } = useContext(ThemeContext);
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible)
 	};
 
 	return (
-		<SafeAreaView style={styles.box}>
-			<ImageBackground
-				style={styles.backgroundImg}
-				source={require('./assets/CalendarBacground.png')}
-			>
-				<View style={styles.container}>
-					<Text style={styles.text}> {t("Calendar")}</Text>
-					<View style={styles.calendarContainer}>
-						<CustomCalendar onDaySelect={(day) => console.log(`Date selected: ${day.dateString}`)}
-						/>
+		<SafeAreaView style={[styles.box, { backgroundColor: theme.backgroundColor }]}>
+			<View style={styles.box}>
+				<ImageBackground
+					style={styles.backgroundImg}
+					source={require('./assets/CalendarBacground.png')}
+				>
+					<View style={styles.container}>
+						<Text style={styles.text}> {t("Calendar")}</Text>
+						<View style={styles.calendarContainer}>
+							<CustomCalendar onDaySelect={(day) => console.log(`Date selected: ${day.dateString}`)}
+							/>
+						</View>
 					</View>
-				</View>
-			</ImageBackground>
-			<TouchableOpacity
-				onPress={()=> setModalVisible(true)}
-				style={styles.btnContainer}
-			>
-				<Text style={styles.createBtnText}>{t("Create Task")}</Text>
-			</TouchableOpacity>
-			{footerComponent(navigation)}
-			<Modal
-				animationType="slide"
-				transparent={isModalVisible}
-				visible={isModalVisible}
-				onRequestClose={toggleModal}
-			>
-				<ModalContent closeModal={()=> setModalVisible(false)}/>
-			</Modal>
+				</ImageBackground>
+				<TouchableOpacity
+					onPress={()=> setModalVisible(true)}
+					style={styles.btnContainer}
+				>
+					<Text style={styles.createBtnText}>{t("Create Task")}</Text>
+				</TouchableOpacity>
+				{footerComponent(navigation)}
+				<Modal
+					animationType="slide"
+					transparent={isModalVisible}
+					visible={isModalVisible}
+					onRequestClose={toggleModal}
+				>
+					<ModalContent closeModal={()=> setModalVisible(false)}/>
+				</Modal>
+			</View>
 		</SafeAreaView>
 	);
 }
@@ -119,7 +123,7 @@ export default function CalendarPage({ navigation }) {
 const styles = StyleSheet.create({
 	box: {
 		width: '100%',
-		height: '97%',
+		height: '100%',
 		display: 'flex',
 		alignItems: 'center',
 	},

@@ -1,14 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { SafeAreaView, StyleSheet, TextInput, ImageBackground,Text, View } from "react-native";
 import { footerComponent } from "../helpers/helpers";
 import { getCurrentWeather } from "../api/api";
 import { WeatherCard } from "./WeatherCard";
 import { useTranslation } from "react-i18next";
+import { ThemeContext } from "../theme/ThemeContext";
 
 export const WeatherPage = ({ navigation }) => {
 	const [city, setCity] = useState('Albacete');
 	const [weatherList, setWeatherList] = useState();
 	const { t } = useTranslation()
+	const { theme, toggleTheme } = useContext(ThemeContext);
 
 	const fetchData = async () => {
 		try {
@@ -33,33 +35,34 @@ export const WeatherPage = ({ navigation }) => {
 	}, [weatherList]);
 
 	return (
-		<SafeAreaView style={styles.box}>
-			<ImageBackground
-				style={styles.backgroundImg}
-				source={require('../assets/CalendarBacground.png')}
-			>
-				<Text style={styles.title}>{t('Weather')}</Text>
-				<TextInput
-					value={city}
-					style={styles.input}
-					onChangeText={setCity}
-					placeholderTextColor="#fff"
-					placeholder={ t( "Search city" ) }
-					onBlur={handleBlur} // Add onBlur event handler
-				/>
-				<View style={styles.weatherBox}>{renderWeather}</View>
-			</ImageBackground>
-			{footerComponent(navigation)}
+		<SafeAreaView style={[styles.box, { backgroundColor: theme.backgroundColor }]}>
+			<View style={styles.box}>
+				<ImageBackground
+					style={styles.backgroundImg}
+					source={require('../assets/CalendarBacground.png')}
+				>
+					<Text style={styles.title}>{t('Weather')}</Text>
+					<TextInput
+						value={city}
+						style={styles.input}
+						onChangeText={setCity}
+						placeholderTextColor="#fff"
+						placeholder={ t( "Search city" ) }
+						onBlur={handleBlur} // Add onBlur event handler
+					/>
+					<View style={styles.weatherBox}>{renderWeather}</View>
+				</ImageBackground>
+				{footerComponent(navigation)}
+			</View>
 		</SafeAreaView>
 	);
 };
 const styles = StyleSheet.create({
 	box: {
 		width: '100%',
-		height: '95%',
+		height: '100%',
 		display: 'flex',
 		alignItems: 'center',
-		padding: 20,
 	},
 	input: {
 		marginTop: 20,

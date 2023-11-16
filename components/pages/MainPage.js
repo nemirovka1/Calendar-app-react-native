@@ -12,17 +12,19 @@ import {
 } from "react-native";
 import { footerComponent, formatDate, getCurrentDay, renderListNotes } from "../helpers/helpers";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from "react-i18next";
-import i18n from '../i18n/i18n';
 import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
+import { ThemeContext } from "../theme/ThemeContext";
 
 export const MainPage = ({navigation}) => {
 	const listNotes = useSelector(selectNotesList)
 	const [searchText, setSearchText] = useState("")
 	const [activeSlide, setActiveSlide] = useState(0)
 	const { t } = useTranslation()
+	const { theme, toggleTheme } = useContext(ThemeContext);
+
 
 	const sortedNotesList = listNotes.slice().sort((a, b) => {
 		const dateA = new Date(a.startDate)
@@ -41,11 +43,13 @@ export const MainPage = ({navigation}) => {
 
 
 	return (
-			<SafeAreaView style={styles.container}>
+			<SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+				<Button title="Сменить тему" onPress={toggleTheme} />
 				<LanguageSwitcher/>
+				<View  style={styles.box}>
 					<View>
-						<Text style={styles.titleText}>{t("Main Title")}</Text>
-						<Text style={styles.dayTitle}>{formatDate(getCurrentDay())}</Text>
+						<Text style={[styles.titleText, { color: theme.textColor }]}>{t("Main Title")}</Text>
+						<Text style={[styles.dayTitle, { color: theme.textColor }]}>{formatDate(getCurrentDay())}</Text>
 					</View>
 					<View style={styles.categoryBox}>
 						<Carousel
@@ -75,17 +79,19 @@ export const MainPage = ({navigation}) => {
 						/>
 					</View>
 					<View style={styles.filterContainer}>
-						<Text style={styles.filterText}>{t("Tasks")}</Text>
+						<Text style={[styles.filterText, { color: theme.textColor }]}>{t("Tasks")}</Text>
 						<TextInput
 							style={styles.filterInput}
 							placeholder={t("Type Task")}
 							value={searchText}
 							onChangeText={setSearchText}
 						/>
-						<Icon name="search" size={18} style={{ position: 'absolute', right: 10, top: 5 }} />
+						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 5 }} />
 					</View>
-				{renderListNotes(filteredNotes, navigation)}
-				{footerComponent(navigation)}
+					{renderListNotes(filteredNotes, navigation)}
+					{footerComponent(navigation)}
+				</View>
+
 			</SafeAreaView>
 	)
 }
@@ -93,9 +99,13 @@ export const MainPage = ({navigation}) => {
 const styles = StyleSheet.create({
 	container: {
 		display: 'flex',
-		margin: 25,
 		alignItems: 'center',
 		flex: 1,
+	},
+	box: {
+		display: 'flex',
+		margin: 25,
+		alignItems: 'center',
 	},
 	titleText: {
 		fontSize: 24,
