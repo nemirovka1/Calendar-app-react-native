@@ -13,19 +13,17 @@ const Stack = createNativeStackNavigator();
 export default function Navigate () {
 	return (
 		<NavigationContainer>
-		<ThemeProvider>
-			<LanguageProvider>
-
-					<Stack.Navigator>
-						<Stack.Screen name="Home" component={ListPage} />
-						<Stack.Screen name="Calendar" component={CalendarPage}/>
-						<Stack.Screen name="Main" component={MainPage}/>
-						<Stack.Screen name="DetailsEvent" component={EventTypeDetails}/>
-						<Stack.Screen name="Weather" component={WeatherPage}/>
-					</Stack.Navigator>
-
-			</LanguageProvider>
-		</ThemeProvider>
+			<ThemeProvider>
+				<LanguageProvider>
+						<Stack.Navigator>
+							<Stack.Screen name="Home" component={ListPage} />
+							<Stack.Screen name="Calendar" component={CalendarPage}/>
+							<Stack.Screen name="Main" component={MainPage}/>
+							<Stack.Screen name="DetailsEvent" component={EventTypeDetails}/>
+							<Stack.Screen name="Weather" component={WeatherPage}/>
+						</Stack.Navigator>
+				</LanguageProvider>
+			</ThemeProvider>
 		</NavigationContainer>
 	)
 }

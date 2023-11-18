@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
 	calendarContainer: {
 		width: 420,
 		marginTop: 30,
-		borderRadius: 28,
+		// borderRadius: 28,
 		justifyContent: 'center',
 	},
 	todayButton: {
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		borderRadius: 50,
+		// borderRadius: 50,
 		backgroundColor: '#6435f5',
 		width: 350,
 		height: 60,

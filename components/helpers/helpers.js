@@ -279,6 +279,8 @@ const styles = StyleSheet.create({
 		gap: 15,
 		marginTop: 10,
 		width: '100%',
+		borderColor: 'gray',
+		borderWidth: 1,
 		backgroundColor: 'white',
 		borderRadius: 10,
 		padding: 10,

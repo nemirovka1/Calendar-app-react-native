@@ -89,9 +89,8 @@ export const MainPage = ({navigation}) => {
 						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 5 }} />
 					</View>
 					{renderListNotes(filteredNotes, navigation)}
-					{footerComponent(navigation)}
 				</View>
-
+				{footerComponent(navigation)}
 			</SafeAreaView>
 	)
 }
@@ -101,6 +100,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		flex: 1,
+		height: '90%',
 	},
 	box: {
 		display: 'flex',
