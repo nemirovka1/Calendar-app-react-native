@@ -44,8 +44,7 @@ export const LanguageSwitcher = () => {
 				onChange={changeAppLanguage}
 				containerStyle={{
 					borderRadius: 8,
-					backgroundColor: theme.backgroundColor,
-					color: '#fff',
+					backgroundColor: '#7d54e8',
 				}}
 			/>
 		</View>
@@ -56,8 +55,7 @@ const styles = StyleSheet.create({
 	dropdown: {
 		width: 120,
 		height: 40,
-		borderColor: 'gray',
-		borderWidth: 0.5,
+		backgroundColor: '#7d54e8',
 		borderRadius: 8,
 		paddingHorizontal: 8,
 	},

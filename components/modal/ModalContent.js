@@ -95,7 +95,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 					// validationSchema={validationSchema}
 					onSubmit={handleSubmit}
 				>
-					{({ handleChange, handleBlur, handleSubmit, values, errors , setFieldValue}) => (
+					{({ handleChange, handleBlur, handleSubmit, values, setFieldValue}) => (
 						<View style={{width: '100%', height: '100%' }}>
 							<ImageBackground source={require('../assets/CalendarBacground.png')} style={styles.bgcImage}>
 								<SafeAreaView style={styles.container}>
@@ -106,7 +106,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 											</TouchableOpacity>
 										</View>
 										<Text style={styles.modalTitle}>{editTask? t("Edit Task") : t("Create Task")}</Text>
-										<SafeAreaView style={styles.modalSection} >
+										<SafeAreaView style={styles.modalSection}>
 											<View style={styles.dropdownGender}>
 												<Text style={styles.textInputLabel}>{t("Category")}</Text>
 												<DropDownPicker
@@ -119,9 +119,6 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 														{ label: t('Work'), value: 'work', color: 'orange' },
 														{ label: t('University'), value: 'university', color: 'red' },
 													]}
-													customItemContainerStyle={{
-														backgroundColor: 'red',
-													}}
 													setValue={setEventType}
 													placeholderStyle={{
 														color: 'white',
@@ -148,12 +145,13 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 								</SafeAreaView>
 							</ImageBackground>
 							<View style={[styles.modalSectionTime, { backgroundColor: theme.backgroundColor }]}>
-								<SafeAreaView style={{ gap: 20 }}>
-									<TouchableOpacity style={styles.dateBox}>
-										<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Starts")}</Text>
+								<View>
+									<SafeAreaView style={{ gap: 20 }}>
+										<TouchableOpacity style={styles.dateBox}>
+											<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Starts")}</Text>
 											<SafeAreaView style={styles.timeBox}>
 												<TouchableOpacity onPress={()=> setDatePickerStartVisibility(true)}>
-													<Text style={styles.dateTitle}>{values.startDate ? `${formatDate(values.startDate)} - ${formatTime(values.startDate)}` : 'Select Date' }</Text>
+													<Text style={styles.dateTitle}>{values.startDate ? `${formatDate(values.startDate, t)} - ${formatTime(values.startDate, t)}` : 'Select Date' }</Text>
 												</TouchableOpacity>
 												{isDatePickerStartVisible && (
 													<DateTimePickerModal
@@ -167,45 +165,44 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 													/>
 												)}
 											</SafeAreaView>
-									</TouchableOpacity>
-									<View style={styles.separator} />
-									<TouchableOpacity style={styles.dateBox}>
-										<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Ends")}</Text>
-										<SafeAreaView style={styles.timeBox}>
-											<TouchableOpacity onPress={()=> setDatePickerEndVisibility(true)}>
-												<Text style={styles.dateTitle}>{values.endDate ?  `${formatDate(values.endDate)} - ${formatTime(values.endDate)}` : 'Select Date' }</Text>
-											</TouchableOpacity>
-											{isDatePickerEndVisible && (
-												<DateTimePickerModal
-													isVisible={isDatePickerEndVisible}
-													testID="endDateTimePicker"
-													value={values.endDate}
-													mode={'datetime'}
-													is24Hour={true}
-													onConfirm={(selectedDate) => onChangeEndTime(selectedDate, setFieldValue)}
-													onCancel={() => setDatePickerEndVisibility(false)}
-												/>
-											)}
-										</SafeAreaView>
-									</TouchableOpacity>
+										</TouchableOpacity>
+										<View style={styles.separator} />
+										<TouchableOpacity style={styles.dateBox}>
+											<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Ends")}</Text>
+											<SafeAreaView style={styles.timeBox}>
+												<TouchableOpacity onPress={()=> setDatePickerEndVisibility(true)}>
+													<Text style={styles.dateTitle}>{values.endDate ?  `${formatDate(values.endDate, t)} - ${formatTime(values.endDate, t)}` : 'Select Date' }</Text>
+												</TouchableOpacity>
+												{isDatePickerEndVisible && (
+													<DateTimePickerModal
+														isVisible={isDatePickerEndVisible}
+														testID="endDateTimePicker"
+														value={values.endDate}
+														mode={'datetime'}
+														is24Hour={true}
+														onConfirm={(selectedDate) => onChangeEndTime(selectedDate, setFieldValue)}
+														onCancel={() => setDatePickerEndVisibility(false)}
+													/>
+												)}
+											</SafeAreaView>
+										</TouchableOpacity>
 									</SafeAreaView>
-								<View style={{marginTop: 30}}>
-									<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
-									<TextInput
-										style={styles.textInput}
-										onChangeText={handleChange('description')}
-										onBlur={handleBlur('description')}
-										value={values.description}
-										placeholderTextColor={theme.textColor}
-										placeholder={t("DescText")}
-									/>
+									<View style={{marginTop: 30}}>
+										<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
+										<TextInput
+											style={styles.textInput}
+											onChangeText={handleChange('description')}
+											onBlur={handleBlur('description')}
+											value={values.description}
+											placeholderTextColor={theme.textColor}
+											placeholder={t("DescText")}
+										/>
+									</View>
 								</View>
-									<TouchableOpacity
-										onPress={handleSubmit}
-										style={styles.btnContainer}
-									>
-											<Text style={styles.createBtnText}>{editTask? t('Update Task') : t('Add Task')}</Text>
-									</TouchableOpacity>
+
+								<TouchableOpacity onPress={handleSubmit} style={styles.btnContainer}>
+										<Text style={styles.createBtnText}>{editTask? t('Update Task') : t('Add Task')}</Text>
+								</TouchableOpacity>
 							</View>
 						</View>
 					)}
@@ -236,7 +233,7 @@ const styles = StyleSheet.create({
 	},
 	modalSection: {
 		marginTop: 5,
-		padding: 10,
+		padding: 5,
 		gap: 10,
 		borderRadius: 8,
 	},
@@ -253,6 +250,7 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	textInput: {
+		color: '#fff',
 		fontSize: 18,
 		padding: 10,
 	},
@@ -286,7 +284,7 @@ const styles = StyleSheet.create({
 	},
 	picker: {
 		borderWidth: 0,
-		color: 'red',
+		textDecorationColor: '#fff',
 		backgroundColor: 'rgba(255, 255, 255, 0.1)',
 	},
 	placeholderStyles: {
@@ -321,7 +319,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: 50,
 		backgroundColor: '#6435f5',
-		marginTop: 150,
+		marginTop: 70,
 		width: '100%',
 		height: 60,
 	},

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { footerComponent, formatDate, getCurrentDay, renderListNotes } from "../helpers/helpers";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
@@ -24,7 +24,6 @@ export const MainPage = ({navigation}) => {
 	const [activeSlide, setActiveSlide] = useState(0)
 	const { t } = useTranslation()
 	const { theme } = useContext(ThemeContext)
-
 
 	const sortedNotesList = listNotes.slice().sort((a, b) => {
 		const dateA = new Date(a.startDate)
@@ -51,7 +50,7 @@ export const MainPage = ({navigation}) => {
 				<View  style={styles.box}>
 					<View style={styles.introBox}>
 						<Text style={[styles.titleText, { color: theme.textColor }]}>{t("Main Title")}</Text>
-						<Text style={[styles.dayTitle, { color: theme.textColor }]}>{formatDate(getCurrentDay())}</Text>
+						<Text style={[styles.dayTitle, { color: theme.textColor }]}>{formatDate(getCurrentDay(), t)}</Text>
 					</View>
 					<View style={styles.categoryBox}>
 						<Carousel
@@ -67,7 +66,7 @@ export const MainPage = ({navigation}) => {
 								</TouchableOpacity>
 							)}
 							sliderWidth={300}
-							itemWidth={260}
+							itemWidth={220}
 							onSnapToItem={(index) => setActiveSlide(index)}
 						/>
 						<Pagination
@@ -90,7 +89,7 @@ export const MainPage = ({navigation}) => {
 						/>
 						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 10 }} />
 					</View>
-					{renderListNotes(filteredNotes, navigation)}
+					{renderListNotes(filteredNotes)}
 				</View>
 				{footerComponent(navigation)}
 			</SafeAreaView>
@@ -123,7 +122,6 @@ const styles = StyleSheet.create({
 	categoryBox: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 15,
 	},
 	categoryCard: {
 		width: 240,
@@ -131,8 +129,8 @@ const styles = StyleSheet.create({
 	},
 	backgroundImage: {
 		display: 'flex',
-		width: 300,
-		height: 300,
+		width: 250,
+		height: 250,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

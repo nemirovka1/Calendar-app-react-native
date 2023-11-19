@@ -12,13 +12,15 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { CheckBox } from "react-native-elements";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { ModalContent } from "../modal/ModalContent";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { setNotesList } from "../store/slice";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { ThemeContext } from "../theme/ThemeContext";
+import { darkTheme, lightTheme } from "../theme/theme";
 
 export const getCurrentDay = () => {
 	const today = new Date();
@@ -28,10 +30,9 @@ export const getCurrentDay = () => {
 
 	return `${year}-${month}-${day}`;
 };
-export const formatDate = (inputDateStr) => {
+export const formatDate = (inputDateStr, t) => {
 	const inputDate = new Date(inputDateStr);
 	const day = inputDate.getDate();
-	const {t} = useTranslation()
 	const monthNames = [
 		t("January"),
 		t("February"),
@@ -106,7 +107,9 @@ export const renderListNotes = (listNotes) => {
 	const [modalId, setModalId] = useState(null)
 	const dispatch = useDispatch()
 	const { t } = useTranslation()
+	const { theme } = useContext(ThemeContext);
 
+	if(!listNotes) return null
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible)
 	};
@@ -120,10 +123,10 @@ export const renderListNotes = (listNotes) => {
 		setModalId(id);
 	};
 
-	const handleDeleteTask = (id) => {
-		const filterTasksList = listNotes.filter((el) => el.id !== id)
-		dispatch(setNotesList(filterTasksList));
-	}
+	const handleDeleteTask = async (id) => {
+		const filterTasksList = listNotes.filter((el) => el.id !== id);
+		await dispatch(setNotesList(filterTasksList));
+	};
 
 	const leftSwipe = (id) => {
 		return (
@@ -147,19 +150,19 @@ export const renderListNotes = (listNotes) => {
 	return (
 		<SafeAreaView style={styles.notesBox}>
 			<ScrollView>
-				{listNotes.map((el, id) => (
+				{(listNotes || []).map((el, id) => (
 					<GestureHandlerRootView>
 						<Swipeable
 							friction={1}
 							useNativeDriver={true}
 							renderRightActions={()=> rightSwipe(el.id)}
 							renderLeftActions={() => leftSwipe(el.id)}>
-							<TouchableOpacity style={styles.listCard} key={id}>
-								<View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+							<TouchableOpacity style={[styles.listCard, { backgroundColor: theme === darkTheme ? 'rgba(255,255,255,0.81)' : lightTheme.backgroundColor}]}key={id}>
+								<View style={{display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center', justifyContent: 'center'}}>
 									<Image source={require('../assets/Card.png')} style={{width: 50, height: 50}}/>
 									<View style={styles.listInfo}>
 										<Text style={styles.listInfoText}>{t(el.title)}</Text>
-										<Text style={styles.listInfoDate}>{formatDate(el.startDate)}</Text>
+										<Text style={styles.listInfoDate}>{formatDate(el.startDate, t)}</Text>
 									</View>
 								</View>
 								<CheckBox
@@ -289,27 +292,28 @@ const styles = StyleSheet.create({
 	listCard: {
 		display: 'flex',
 		flexDirection: 'row',
+		alignItems: 'center',
 		justifyContent: 'space-between',
 		gap: 15,
-		marginTop: 10,
+		marginTop: 7,
 		width: '100%',
 		borderColor: 'gray',
 		borderWidth: 1,
 		backgroundColor: 'white',
 		borderRadius: 10,
-		padding: 10,
+		padding: 5,
 	},
 	notesBox: {
 		width: '100%',
 		display: 'flex',
-		marginTop: 20,
-		height: '33%',
+		height: '40%',
 		flexDirection: 'column',
-		gap: 10,
+		gap: 7,
 	},
 	listInfo: {
 		display: "flex",
 		flexDirection: 'column',
+		justifyContent: 'center',
 	},
 	listInfoText: {
 		fontSize: 18,
@@ -318,7 +322,6 @@ const styles = StyleSheet.create({
 	},
 	listInfoDate: {
 		fontSize: 14,
-		marginTop: 7,
 		color: '#AEAEB3',
 		fontWeight: 500,
 	},

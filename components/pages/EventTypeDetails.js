@@ -1,12 +1,10 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { formatDate, renderListNotes } from "../helpers/helpers";
-import { CheckBox } from "react-native-elements";
-import { useContext, useMemo, useState } from "react";
+import { renderListNotes } from "../helpers/helpers";
+import { useContext} from "react";
 import { useSelector } from "react-redux";
 import { selectNotesList } from "../store/selectors";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { PieChart } from 'react-native-svg-charts'
 import { ThemeContext } from "../theme/ThemeContext";
 import { useTranslation } from "react-i18next";
 
@@ -58,25 +56,11 @@ export const EventTypeDetails = ({ navigation }) => {
 		},
 	];
 
-	const renderDiagram = useMemo(()=> {
-		if(!listNotes.length) return null
-
-		return (
-			<View style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 30 }}>
-					<PieChart style={{ height: 200, width: 200 }} data={data}>
-						<Text>
-							{`${Math.floor(eventPercentage[`${label.toLowerCase()}`])|| 0}%`}
-						</Text>
-					</PieChart>
-			</View>
-		)
-	}, [eventPercentage, listNotes])
 
 	return (
 		<SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
 			<View style={styles.box}>
 				<Text style={[styles.title, { color: theme.textColor }]}>{label}</Text>
-				{renderDiagram}
 				<View style={styles.filterContainer}>
 					<Text style={[styles.filterText, { color: theme.textColor }]}>{t('Tasks')}</Text>
 					<TextInput
