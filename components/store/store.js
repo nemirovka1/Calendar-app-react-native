@@ -5,6 +5,10 @@ const store = configureStore({
 	reducer: {
 		[counterReducerName]: counterReducer
 	},
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware({
+			serializableCheck: false,
+		}),
 });
 
 export default store;

@@ -7,23 +7,23 @@ import {
 	Text,
 	ImageBackground,
 	TextInput,
-	Button,
-	TouchableOpacity
+	TouchableOpacity,
 } from "react-native";
 import { footerComponent, formatDate, getCurrentDay, renderListNotes } from "../helpers/helpers";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
 import { ThemeContext } from "../theme/ThemeContext";
+import { ThemeSwitcher } from "../i18n/ThemeSwitcher";
 
 export const MainPage = ({navigation}) => {
 	const listNotes = useSelector(selectNotesList)
 	const [searchText, setSearchText] = useState("")
 	const [activeSlide, setActiveSlide] = useState(0)
 	const { t } = useTranslation()
-	const { theme, toggleTheme } = useContext(ThemeContext);
+	const { theme } = useContext(ThemeContext)
 
 
 	const sortedNotesList = listNotes.slice().sort((a, b) => {
@@ -44,10 +44,12 @@ export const MainPage = ({navigation}) => {
 
 	return (
 			<SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-				<Button title="Сменить тему" onPress={toggleTheme} />
-				<LanguageSwitcher/>
+				<View style={styles.settingsBox}>
+					<LanguageSwitcher/>
+					<ThemeSwitcher/>
+				</View>
 				<View  style={styles.box}>
-					<View>
+					<View style={styles.introBox}>
 						<Text style={[styles.titleText, { color: theme.textColor }]}>{t("Main Title")}</Text>
 						<Text style={[styles.dayTitle, { color: theme.textColor }]}>{formatDate(getCurrentDay())}</Text>
 					</View>
@@ -86,7 +88,7 @@ export const MainPage = ({navigation}) => {
 							value={searchText}
 							onChangeText={setSearchText}
 						/>
-						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 5 }} />
+						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 10 }} />
 					</View>
 					{renderListNotes(filteredNotes, navigation)}
 				</View>
@@ -100,7 +102,8 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		flex: 1,
-		height: '90%',
+		height: '100%',
+		padding: 10,
 	},
 	box: {
 		display: 'flex',
@@ -123,8 +126,8 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 	},
 	categoryCard: {
-		width: 340,
-		height: 340,
+		width: 240,
+		height: 240,
 	},
 	backgroundImage: {
 		display: 'flex',
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		flexDirection: 'row',
 		alignItems: 'center',
-		gap: 2,
+		gap: 10,
 	},
 	filterText: {
 		color: '#2E3A59',
@@ -207,5 +210,48 @@ const styles = StyleSheet.create({
 		color: '#AEAEB3',
 		fontWeight: 500,
 	},
+	themeBox: {
+		position: 'absolute',
+		right: 0,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	themeIcon: {
+		width: 35,
+		height: 35,
+	},
+	containerSwitch: {
+		borderRadius: 15,
+		width: 65,
+		height: 35,
+		justifyContent: 'center',
+		margin: 30,
+	},
+	circle: {
+		width: 30,
+		height: 35,
+		borderRadius: 50,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	imageBackground: {
+		flex: 1,
+		width: 30,
+		height: 30,
+	},
+	settingsBox: {
+		display: "flex",
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		width: '100%',
+	},
+	introBox: {
+		display: "flex",
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+	}
 });
 

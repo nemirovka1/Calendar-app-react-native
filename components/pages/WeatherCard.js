@@ -11,7 +11,7 @@ export const WeatherCard = ({weatherList}) => {
 				<View style={styles.weatherContainer}>
 					<View style={styles.imageBox}>
 						<Image source={{ uri: image }} style={styles.image} />
-						<Text style={styles.tempTitle}>{weatherList.temp} °C</Text>
+						<Text style={styles.tempTitle}>{weatherList.temp.toFixed()} °C</Text>
 					</View>
 				</View>
 				<Text style={styles.title}>{weatherList.city_name}</Text>
@@ -19,7 +19,7 @@ export const WeatherCard = ({weatherList}) => {
 				<View style={styles.bottom}>
 					<View>
 						<Text style={styles.weatherText}>{weatherList.app_temp.toFixed()}</Text>
-						<Text style={styles.weatherText}>Feels like</Text>
+						<Text style={styles.weatherText}>Feels Like</Text>
 					</View>
 					<View>
 						<Text style={styles.weatherText}>{weatherList?.rh} %</Text>
@@ -36,11 +36,11 @@ export const WeatherCard = ({weatherList}) => {
 }
 const styles = StyleSheet.create({
 	box: {
-		width: '95%',
-		height: '45%',
+		width: '100%',
+		height: '55%',
 		display: 'flex',
 		alignItems: 'center',
-		padding: 20,
+		padding: 10,
 	},
 	title: {
 		textAlign: 'center',
@@ -65,14 +65,14 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: "center",
 		justifyContent: 'space-between',
-		gap: 20,
+		gap: 10,
 	},
 	bottom: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-evenly',
-        borderRadius: '10px',
-		padding: 7,
+        borderRadius: 10,
+		padding: 3,
 		width: '100%',
 		backgroundColor: 'rgba(255,255,255, 0.2)',
 	},
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		gap: 15,
+		gap: 10,
 	},
     tempTitle: {
 		color: '#fff',

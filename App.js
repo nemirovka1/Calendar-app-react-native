@@ -1,12 +1,13 @@
 import MainStack from './components/navigate'
 import { Provider } from "react-redux";
 import store from "./components/store/store";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import FlashMessage from "react-native-flash-message";
 
 export default function App() {
   return (
           <Provider store={store}>
-                  <MainStack />
+               <MainStack />
+              <FlashMessage position="top" />
           </Provider>
   );
 }

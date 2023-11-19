@@ -31,7 +31,21 @@ export const getCurrentDay = () => {
 export const formatDate = (inputDateStr) => {
 	const inputDate = new Date(inputDateStr);
 	const day = inputDate.getDate();
-	const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	const {t} = useTranslation()
+	const monthNames = [
+		t("January"),
+		t("February"),
+		t("March"),
+		t("April"),
+		t("May"),
+		t("June"),
+		t("July"),
+		t("August"),
+		t("September"),
+		t("October"),
+		t("November"),
+		t("December")
+	];
 	const month = monthNames[inputDate.getMonth()];
 	const year = inputDate.getFullYear();
 	return `${day} ${month} ${year}`;

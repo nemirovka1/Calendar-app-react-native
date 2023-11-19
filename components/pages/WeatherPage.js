@@ -48,7 +48,7 @@ export const WeatherPage = ({ navigation }) => {
 						onChangeText={setCity}
 						placeholderTextColor="#fff"
 						placeholder={ t( "Search city" ) }
-						onBlur={handleBlur} // Add onBlur event handler
+						onBlur={handleBlur}
 					/>
 					<View style={styles.weatherBox}>{renderWeather}</View>
 				</ImageBackground>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 		padding: 15,
 		fontSize: 18,
 		width: '80%',
-		// borderRadius: 10,
+		borderRadius: 10,
 		backgroundColor: '#8a76d9',
 		color: '#fff',
 	},
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
 	weatherBox: {
 		display: 'flex',
 		alignItems: 'center',
-		marginTop: 90,
+		marginTop: 50,
 		width: '90%',
 		height: '100%',
 	}

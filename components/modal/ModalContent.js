@@ -9,13 +9,14 @@ import {
 } from "react-native";
 import React, { useContext, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotesList } from "../store/slice";
 import { selectNotesList } from "../store/selectors";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../theme/ThemeContext";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { formatDate, formatTime } from "../helpers/helpers";
 
 export const ModalContent = ({closeModal, id, editTask}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -24,6 +25,8 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { t } = useTranslation()
 	const { theme } = useContext(ThemeContext);
+	const [isDatePickerEndVisible, setDatePickerEndVisibility] = useState(false)
+	const [isDatePickerStartVisible, setDatePickerStartVisibility] = useState(false);
 
 	let initialValues;
 	if (id) {
@@ -67,14 +70,17 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 		closeModal();
 	};
 
-	const onChangeStartTime = (event, selectedDate, setFieldValue) => {
+	const onChangeStartTime = (selectedDate, setFieldValue) => {
 		if (selectedDate) {
 			setFieldValue('startDate', selectedDate);
+			setDatePickerStartVisibility(false);
 		}
+
 	};
-	const onChangeEndTime = (event, selectedDate, setFieldValue) => {
+	const onChangeEndTime = (selectedDate, setFieldValue) => {
 		if (selectedDate) {
 			setFieldValue('endDate', selectedDate);
+			setDatePickerEndVisibility(false)
 		}
 	};
 
@@ -146,44 +152,44 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									<TouchableOpacity style={styles.dateBox}>
 										<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Starts")}</Text>
 											<SafeAreaView style={styles.timeBox}>
-												<DateTimePicker
-													testID="startDateTimePicker"
-													value={values.startDate}
-													mode={'date'}
-													is24Hour={true}
-													onChange={(event, selectedDate) => onChangeStartTime(event, selectedDate, setFieldValue)}
-												/>
-												<DateTimePicker
-													testID="startDateTimePicker"
-													value={values.startDate}
-													mode={'time'}
-													is24Hour={true}
-													onChange={(event, selectedDate) => onChangeStartTime(event, selectedDate, setFieldValue)}
-												/>
+												<TouchableOpacity onPress={()=> setDatePickerStartVisibility(true)}>
+													<Text style={styles.dateTitle}>{values.startDate ? `${formatDate(values.startDate)} - ${formatTime(values.startDate)}` : 'Select Date' }</Text>
+												</TouchableOpacity>
+												{isDatePickerStartVisible && (
+													<DateTimePickerModal
+														isVisible={isDatePickerStartVisible}
+														testID="startDateTimePicker"
+														value={values.startDate}
+														mode={'datetime'}
+														is24Hour={true}
+														onConfirm={(selectedDate) => onChangeStartTime(selectedDate, setFieldValue)}
+														onCancel={() => setDatePickerStartVisibility(false)}
+													/>
+												)}
 											</SafeAreaView>
 									</TouchableOpacity>
 									<View style={styles.separator} />
 									<TouchableOpacity style={styles.dateBox}>
 										<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Ends")}</Text>
 										<SafeAreaView style={styles.timeBox}>
-											<DateTimePicker
-												testID="endDateTimePicker"
-												value={values.endDate}
-												mode={'date'}
-												is24Hour={true}
-												onChange={(event, selectedDate) => onChangeEndTime(event, selectedDate, setFieldValue)}
-											/>
-											<DateTimePicker
-												testID="endDateTimePicker"
-												value={values.endDate}
-												mode={'time'}
-												is24Hour={true}
-												onChange={(event, selectedDate) => onChangeEndTime(event, selectedDate, setFieldValue)}
-											/>
+											<TouchableOpacity onPress={()=> setDatePickerEndVisibility(true)}>
+												<Text style={styles.dateTitle}>{values.endDate ?  `${formatDate(values.endDate)} - ${formatTime(values.endDate)}` : 'Select Date' }</Text>
+											</TouchableOpacity>
+											{isDatePickerEndVisible && (
+												<DateTimePickerModal
+													isVisible={isDatePickerEndVisible}
+													testID="endDateTimePicker"
+													value={values.endDate}
+													mode={'datetime'}
+													is24Hour={true}
+													onConfirm={(selectedDate) => onChangeEndTime(selectedDate, setFieldValue)}
+													onCancel={() => setDatePickerEndVisibility(false)}
+												/>
+											)}
 										</SafeAreaView>
 									</TouchableOpacity>
 									</SafeAreaView>
-								<View style={{marginTop: 50}}>
+								<View style={{marginTop: 30}}>
 									<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
 									<TextInput
 										style={styles.textInput}
@@ -229,14 +235,13 @@ const styles = StyleSheet.create({
 		width: '100%',
 	},
 	modalSection: {
-		marginTop: 10,
+		marginTop: 5,
 		padding: 10,
-		gap: 15,
+		gap: 10,
 		borderRadius: 8,
 	},
 	modalContent: {
 		display: 'flex',
-		gap: 5,
 		width: '100%',
 	},
 	managementBtn: {
@@ -330,6 +335,10 @@ const styles = StyleSheet.create({
 		color: '#182965',
 		fontSize: 18,
 		marginBottom: 12
+	},
+	dateTitle: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		color: '#762DD2',
 	}
-
 });
