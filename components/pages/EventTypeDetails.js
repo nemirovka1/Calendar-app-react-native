@@ -1,12 +1,12 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { renderListNotes } from "../helpers/helpers";
 import { useContext} from "react";
 import { useSelector } from "react-redux";
 import { selectNotesList } from "../store/selectors";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { ThemeContext } from "../theme/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { NotesList } from "../helpers/NotesList";
 
 
 export const EventTypeDetails = ({ navigation }) => {
@@ -67,10 +67,10 @@ export const EventTypeDetails = ({ navigation }) => {
 						style={styles.filterInput}
 						placeholder={ t("Type Task")}
 					/>
-					<Icon name="search" size={18} style={{ position: 'absolute', right: 30, top: 5 }} />
+					<Icon name="search" size={18} style={{ position: 'absolute', right: 30, top: 10 }} />
 				</View>
 				<View style={styles.notesContainer}>
-					{renderListNotes(filterListNotes, navigation)}
+					<NotesList listNotes={filterListNotes}/>
 				</View>
 			</View>
 		</SafeAreaView>

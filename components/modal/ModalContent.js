@@ -190,7 +190,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 									<View style={{marginTop: 30}}>
 										<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
 										<TextInput
-											style={styles.textInput}
+											style={styles.textInputDesc}
 											onChangeText={handleChange('description')}
 											onBlur={handleBlur('description')}
 											value={values.description}
@@ -251,6 +251,11 @@ const styles = StyleSheet.create({
 	},
 	textInput: {
 		color: '#fff',
+		fontSize: 18,
+		padding: 10,
+	},
+	textInputDesc:{
+		color: 'black',
 		fontSize: 18,
 		padding: 10,
 	},

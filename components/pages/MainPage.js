@@ -9,7 +9,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 } from "react-native";
-import { footerComponent, formatDate, getCurrentDay, renderListNotes } from "../helpers/helpers";
+import { footerComponent, formatDate, getCurrentDay } from "../helpers/helpers";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { useContext, useState } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
 import { ThemeContext } from "../theme/ThemeContext";
 import { ThemeSwitcher } from "../i18n/ThemeSwitcher";
+import { NotesList } from "../helpers/NotesList";
 
 export const MainPage = ({navigation}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -38,8 +39,7 @@ export const MainPage = ({navigation}) => {
 	]
 
 	const filteredNotes = sortedNotesList.filter(note =>
-		(note?.title?.toLowerCase()).includes(searchText.toLowerCase()))
-
+		(note?.title?.toLowerCase())?.includes(searchText.toLowerCase()))
 
 	return (
 			<SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
@@ -89,7 +89,7 @@ export const MainPage = ({navigation}) => {
 						/>
 						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 10 }} />
 					</View>
-					{renderListNotes(filteredNotes)}
+					<NotesList listNotes={filteredNotes}/>
 				</View>
 				{footerComponent(navigation)}
 			</SafeAreaView>
