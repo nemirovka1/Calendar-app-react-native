@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../theme/ThemeContext";
@@ -10,6 +10,7 @@ import { darkTheme, lightTheme } from "../theme/theme";
 import { CheckBox } from "react-native-elements";
 import { ModalContent } from "../modal/ModalContent";
 import { formatDate } from "./helpers";
+import { ErrorData } from "../error/ErrorModal";
 
 export const NotesList = ({ listNotes }) => {
 	const [noteChecked, setNoteChecked] = useState(Array(listNotes.length).fill(false));
@@ -18,6 +19,7 @@ export const NotesList = ({ listNotes }) => {
 	const dispatch = useDispatch()
 	const { t } = useTranslation()
 	const { theme } = useContext(ThemeContext);
+	const [isOpenModal, setIsOpenModal] = useState(false)
 
 	if(!listNotes || listNotes.length === 0) return null
 	const toggleModal = () => {
@@ -39,14 +41,20 @@ export const NotesList = ({ listNotes }) => {
 	};
 
 	const leftSwipe = (id) => {
-		return (
-			<View style={styles.swipeContainer}>
-				<TouchableOpacity style={styles.swipeBoxDelete} onPress={() => handleDeleteTask(id)}>
-					<Icon name="trash" size={24} color={'white'}/>
-				</TouchableOpacity>
-			</View>
-		)
+		if(!id) return null
+			return (
+				<View style={styles.swipeContainer}>
+					<TouchableOpacity style={styles.swipeBoxDelete} onPress={()=> {
+						setModalId(id);
+						setIsOpenModal(true);
+					}}>
+						<Icon name="trash" size={24} color={'white'}/>
+					</TouchableOpacity>
+					<ErrorData  isOpen={isOpenModal && modalId === id} onDelete={() => handleDeleteTask(id)} onClose={()=> setIsOpenModal(false)} text={'Are you sure you want to delete this task?'}/>
+				</View>
+			)
 	}
+
 	const rightSwipe = (id) => {
 		return (
 			<View style={styles.swipeContainer}>

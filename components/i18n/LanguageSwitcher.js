@@ -10,7 +10,6 @@ export const LanguageSwitcher = () => {
 	const [isFocus, setIsFocus] = useState(false);
 	const { theme } = useContext(ThemeContext);
 
-
 	const data = [
 		{label: 'English', value: 'en'},
 		{label: 'Spanish', value: 'es'},
@@ -44,7 +43,7 @@ export const LanguageSwitcher = () => {
 				onChange={changeAppLanguage}
 				containerStyle={{
 					borderRadius: 8,
-					backgroundColor: '#7d54e8',
+					backgroundColor: '#9679d7',
 				}}
 			/>
 		</View>
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
 	dropdown: {
 		width: 120,
 		height: 40,
-		backgroundColor: '#7d54e8',
+		backgroundColor: '#9679d7',
 		borderRadius: 8,
 		paddingHorizontal: 8,
 	},

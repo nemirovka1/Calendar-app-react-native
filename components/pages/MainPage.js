@@ -1,5 +1,5 @@
-import {  useSelector } from "react-redux";
-import { selectNotesList } from "../store/selectors";
+import {  useSelector } from "react-redux"
+import { selectNotesList } from "../store/selectors"
 import {
 	SafeAreaView,
 	StyleSheet,
@@ -8,16 +8,16 @@ import {
 	ImageBackground,
 	TextInput,
 	TouchableOpacity,
-} from "react-native";
-import { footerComponent, formatDate, getCurrentDay } from "../helpers/helpers";
-import Carousel, { Pagination } from "react-native-snap-carousel";
-import { useContext, useState } from "react";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { useTranslation } from "react-i18next";
-import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
-import { ThemeContext } from "../theme/ThemeContext";
-import { ThemeSwitcher } from "../i18n/ThemeSwitcher";
-import { NotesList } from "../helpers/NotesList";
+	Image,
+} from "react-native"
+import { footerComponent, formatDate, getCurrentDay } from "../helpers/helpers"
+import Carousel, { Pagination } from "react-native-snap-carousel"
+import { useContext, useState } from "react"
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { useTranslation } from "react-i18next"
+import { ThemeContext } from "../theme/ThemeContext"
+import { NotesList } from "../helpers/NotesList"
+import { SideMenu } from "../drawer/CustomDrawer"
 
 export const MainPage = ({navigation}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -37,16 +37,25 @@ export const MainPage = ({navigation}) => {
 		{label: t('University'), redirectTo: null},
 		{label: t('Home'), redirectTo: null},
 	]
+	const [isMenuOpen, setMenuOpen] = useState(false);
 
 	const filteredNotes = sortedNotesList.filter(note =>
 		(note?.title?.toLowerCase())?.includes(searchText.toLowerCase()))
 
+	const openMenu = () => {
+		setMenuOpen(true);
+	};
+
+	const closeMenu = () => {
+		setMenuOpen(false);
+	};
+
 	return (
-			<SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-				<View style={styles.settingsBox}>
-					<LanguageSwitcher/>
-					<ThemeSwitcher/>
-				</View>
+			<SafeAreaView style={[styles.container, { backgroundColor: isMenuOpen? 'rgba(0, 0, 0, 0.4)': theme.backgroundColor }]}>
+				<TouchableOpacity onPress={openMenu} style={styles.settingsBox}>
+					<Image source={require("../assets/Group.png")} style={{width: 25, height: 20}}/>
+				</TouchableOpacity>
+				<SideMenu onClose={closeMenu} isOpen={isMenuOpen}/>
 				<View  style={styles.box}>
 					<View style={styles.introBox}>
 						<Text style={[styles.titleText, { color: theme.textColor }]}>{t("Main Title")}</Text>
@@ -239,11 +248,9 @@ const styles = StyleSheet.create({
 		height: 30,
 	},
 	settingsBox: {
-		display: "flex",
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		width: '100%',
+		position: 'absolute',
+		top: 10,
+		left: 10,
 	},
 	introBox: {
 		display: "flex",

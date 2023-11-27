@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useContext, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
-import { Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotesList } from "../store/slice";
 import { selectNotesList } from "../store/selectors";
@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../theme/ThemeContext";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, formatTime } from "../helpers/helpers";
+import { validationSchema } from "./validationSchema";
 
 export const ModalContent = ({closeModal, id, editTask}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -92,10 +93,10 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 		<View style={styles.modalContainer}>
 				<Formik
 					initialValues={initialValues}
-					// validationSchema={validationSchema}
+					validationSchema={validationSchema}
 					onSubmit={handleSubmit}
 				>
-					{({ handleChange, handleBlur, handleSubmit, values, setFieldValue}) => (
+					{({ handleChange, handleBlur, handleSubmit, values, setFieldValue, isValid, errors}) => (
 						<View style={{width: '100%', height: '100%' }}>
 							<ImageBackground source={require('../assets/CalendarBacground.png')} style={styles.bgcImage}>
 								<SafeAreaView style={styles.container}>
@@ -127,6 +128,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 													topOffset={null}
 													placeholder={t( "Choose category" )}
 												/>
+												{(!eventType.length && !isValid) && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400 }}>Choose Category</Text> }
 											</View>
 											<SafeAreaView style={styles.modalContent}>
 												<Text style={styles.textInputLabel}>{t("Name")}</Text>
@@ -138,6 +140,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 													placeholderTextColor={'white'}
 													placeholder={ t("Title")}
 												/>
+												<ErrorMessage name="title" component={Text} style={{ color: '#f11616', fontSize: 14, fontWeight: 400 }} />
 												<View style={styles.separator} />
 											</SafeAreaView>
 										</SafeAreaView>
@@ -146,7 +149,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 							</ImageBackground>
 							<View style={[styles.modalSectionTime, { backgroundColor: theme.backgroundColor }]}>
 								<View>
-									<SafeAreaView style={{ gap: 20 }}>
+									<SafeAreaView style={{ gap: 10 }}>
 										<TouchableOpacity style={styles.dateBox}>
 											<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Starts")}</Text>
 											<SafeAreaView style={styles.timeBox}>
@@ -154,18 +157,19 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 													<Text style={styles.dateTitle}>{values.startDate ? `${formatDate(values.startDate, t)} - ${formatTime(values.startDate, t)}` : 'Select Date' }</Text>
 												</TouchableOpacity>
 												{isDatePickerStartVisible && (
-													<DateTimePickerModal
-														isVisible={isDatePickerStartVisible}
-														testID="startDateTimePicker"
-														value={values.startDate}
-														mode={'datetime'}
-														is24Hour={true}
-														onConfirm={(selectedDate) => onChangeStartTime(selectedDate, setFieldValue)}
-														onCancel={() => setDatePickerStartVisibility(false)}
-													/>
-												)}
+														<DateTimePickerModal
+															isVisible={isDatePickerStartVisible}
+															testID="startDateTimePicker"
+															value={values.startDate}
+															mode={'datetime'}
+															is24Hour={true}
+															onConfirm={(selectedDate) => onChangeStartTime(selectedDate, setFieldValue)}
+															onCancel={() => setDatePickerStartVisibility(false)}
+														/>
+													)}
 											</SafeAreaView>
 										</TouchableOpacity>
+										{errors.startDate && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400, textAlign: 'right' }}>{errors.startDate}</Text> }
 										<View style={styles.separator} />
 										<TouchableOpacity style={styles.dateBox}>
 											<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Ends")}</Text>
@@ -173,19 +177,20 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 												<TouchableOpacity onPress={()=> setDatePickerEndVisibility(true)}>
 													<Text style={styles.dateTitle}>{values.endDate ?  `${formatDate(values.endDate, t)} - ${formatTime(values.endDate, t)}` : 'Select Date' }</Text>
 												</TouchableOpacity>
-												{isDatePickerEndVisible && (
-													<DateTimePickerModal
-														isVisible={isDatePickerEndVisible}
-														testID="endDateTimePicker"
-														value={values.endDate}
-														mode={'datetime'}
-														is24Hour={true}
-														onConfirm={(selectedDate) => onChangeEndTime(selectedDate, setFieldValue)}
-														onCancel={() => setDatePickerEndVisibility(false)}
-													/>
-												)}
+													{isDatePickerEndVisible && (
+														<DateTimePickerModal
+															isVisible={isDatePickerEndVisible}
+															testID="endDateTimePicker"
+															value={values.endDate}
+															mode={'datetime'}
+															is24Hour={true}
+															onConfirm={(selectedDate) => onChangeEndTime(selectedDate, setFieldValue)}
+															onCancel={() => setDatePickerEndVisibility(false)}
+														/>
+													)}
 											</SafeAreaView>
 										</TouchableOpacity>
+										{errors.endDate && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400, textAlign: 'right' }}>{errors.endDate}</Text> }
 									</SafeAreaView>
 									<View style={{marginTop: 30}}>
 										<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
@@ -197,10 +202,10 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 											placeholderTextColor={theme.textColor}
 											placeholder={t("DescText")}
 										/>
+										<ErrorMessage name="description" component={Text} style={{ color: '#f11616', fontSize: 14, fontWeight: 400 }} />
 									</View>
 								</View>
-
-								<TouchableOpacity onPress={handleSubmit} style={styles.btnContainer}>
+								<TouchableOpacity onPress={handleSubmit} style={isValid ? styles.btnContainer : styles.btnContainerDisabled} disabled={!isValid}>
 										<Text style={styles.createBtnText}>{editTask? t('Update Task') : t('Add Task')}</Text>
 								</TouchableOpacity>
 							</View>
@@ -324,6 +329,16 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: 50,
 		backgroundColor: '#6435f5',
+		marginTop: 70,
+		width: '100%',
+		height: 60,
+	},
+	btnContainerDisabled: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 50,
+		backgroundColor: 'gray',
 		marginTop: 70,
 		width: '100%',
 		height: 60,

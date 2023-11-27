@@ -5,22 +5,27 @@ import { getCurrentWeather } from "../api/api";
 import { WeatherCard } from "./WeatherCard";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../theme/ThemeContext";
+import { ErrorData } from "../error/ErrorModal";
 
 export const WeatherPage = ({ navigation }) => {
 	const [city, setCity] = useState('Albacete');
 	const [weatherList, setWeatherList] = useState();
 	const { t } = useTranslation()
 	const { theme, toggleTheme } = useContext(ThemeContext);
+	const [isErrorModalVisible, setErrorModalVisible] = useState(false);
 
 	const fetchData = async () => {
 		try {
 			const result = await getCurrentWeather(city);
 			setWeatherList(result.data.data[0]);
+			console.log({result})
 		} catch (error) {
-			console.error(error);
+			setErrorModalVisible(true);
 		}
 	};
-
+	const closeModal = () => {
+		setErrorModalVisible(false);
+	};
 	const handleBlur = () => {
 		fetchData();
 	};
@@ -36,6 +41,7 @@ export const WeatherPage = ({ navigation }) => {
 
 	return (
 		<SafeAreaView style={[styles.box, { backgroundColor: theme.backgroundColor }]}>
+			<ErrorData isOpen={isErrorModalVisible} onClose={closeModal} text={'Something went wrong!'}/>
 			<View style={styles.box}>
 				<ImageBackground
 					style={styles.backgroundImg}

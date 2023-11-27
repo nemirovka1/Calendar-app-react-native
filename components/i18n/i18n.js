@@ -42,6 +42,9 @@ i18n
 					"October": "Octubre",
 					"November": "Noviembre",
 					"December": "Diciembre",
+					"Select language": "Seleccione el idioma",
+					'Select theme':"Seleccione el tema",
+					"Title is required": "Se requiere título",
 				},
 			},
 			en: {
@@ -80,7 +83,10 @@ i18n
 					"September": "September",
 					"October": "October",
 					"November": "November",
-					"December": "December"
+					"December": "December",
+					"Select language": "Select language",
+					"Select theme": "Select theme",
+					"Title is required": "Title is required",
 				},
 			},
 			ua: {
@@ -120,6 +126,9 @@ i18n
 					"October": "Жовтень",
 					"November": "Листопад",
 					"December": "Грудень",
+					"Select language": "Оберіть мову",
+					"Select theme": 'Оберіть тему',
+					"Title is required": 'Назва обовʼязкова',
 				},
 			},
 		},

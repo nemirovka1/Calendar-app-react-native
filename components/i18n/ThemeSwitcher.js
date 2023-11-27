@@ -8,7 +8,7 @@ export const ThemeSwitcher = () => {
 
 	return (
 		<View style={styles.themeBox}>
-			<TouchableOpacity onPress={toggleTheme} style={[styles.containerSwitch, { backgroundColor: theme === darkTheme  ? '#3b3ead' :'#7d54e8' }]}>
+			<TouchableOpacity onPress={toggleTheme} style={[styles.containerSwitch, { backgroundColor: theme === darkTheme  ? '#3b3ead' :'#9679d7' }]}>
 				<View style={[styles.circle, { transform: [{ translateX: theme === darkTheme ? 30 : 5 }] }]}>
 					<Text>
 						{theme === darkTheme ? (
