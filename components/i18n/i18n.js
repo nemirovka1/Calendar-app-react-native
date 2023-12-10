@@ -45,6 +45,8 @@ i18n
 					"Select language": "Seleccione el idioma",
 					'Select theme':"Seleccione el tema",
 					"Title is required": "Se requiere título",
+					"Add Location": "Agregar Direccion",
+					"Save": "Ahorrar",
 				},
 			},
 			en: {
@@ -87,6 +89,8 @@ i18n
 					"Select language": "Select language",
 					"Select theme": "Select theme",
 					"Title is required": "Title is required",
+					"Add Location": "Add Location",
+					"Save": "Save",
 				},
 			},
 			ua: {
@@ -129,6 +133,8 @@ i18n
 					"Select language": "Оберіть мову",
 					"Select theme": 'Оберіть тему',
 					"Title is required": 'Назва обовʼязкова',
+					"Add Location": 'Додати локацію',
+					"Save": "Зберегти",
 				},
 			},
 		},

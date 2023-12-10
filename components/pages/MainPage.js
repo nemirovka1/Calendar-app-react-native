@@ -8,7 +8,7 @@ import {
 	ImageBackground,
 	TextInput,
 	TouchableOpacity,
-	Image,
+	Image
 } from "react-native"
 import { footerComponent, formatDate, getCurrentDay } from "../helpers/helpers"
 import Carousel, { Pagination } from "react-native-snap-carousel"
@@ -98,7 +98,7 @@ export const MainPage = ({navigation}) => {
 						/>
 						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 10 }} />
 					</View>
-					<NotesList listNotes={filteredNotes}/>
+					<NotesList listNotes={filteredNotes} navigation={navigation}/>
 				</View>
 				{footerComponent(navigation)}
 			</SafeAreaView>

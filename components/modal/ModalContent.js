@@ -1,5 +1,6 @@
 import {
-	ImageBackground,
+	Image,
+	ImageBackground, Modal,
 	SafeAreaView,
 	StyleSheet,
 	Text,
@@ -18,8 +19,9 @@ import { ThemeContext } from "../theme/ThemeContext";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, formatTime } from "../helpers/helpers";
 import { validationSchema } from "./validationSchema";
+import { AddLocationPageModal } from "../pages/LocationPage";
 
-export const ModalContent = ({closeModal, id, editTask}) => {
+export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 	const listNotes = useSelector(selectNotesList)
 	const dispatch = useDispatch()
 	const [eventType, setEventType] = useState('');
@@ -28,16 +30,21 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 	const { theme } = useContext(ThemeContext);
 	const [isDatePickerEndVisible, setDatePickerEndVisibility] = useState(false)
 	const [isDatePickerStartVisible, setDatePickerStartVisibility] = useState(false);
+	const [selectedLocation, setSelectedLocation] = useState(null);
+    const [openLocationModal, setOpenLocationModal] = useState(false)
+	const handleLocationSelect = (location) => {
+		setSelectedLocation(location);
+	};
 
 	let initialValues;
 	if (id) {
 		const filterListNotes = listNotes.find((el) => el.id === id);
-
 		initialValues = {
 			title: filterListNotes.title,
 			description: filterListNotes.description,
 			startDate: filterListNotes.startDate,
-			endDate: filterListNotes.endDate
+			endDate: filterListNotes.endDate,
+			location: filterListNotes.location,
 		};
 	} else {
 		initialValues = {
@@ -45,6 +52,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 			description: '',
 			startDate: new Date(),
 			endDate: new Date(),
+			location: '',
 		};
 	}
 
@@ -54,6 +62,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 			const updatedNote = {
 				...listNotes[index],
 				...updatedValues,
+				location: selectedLocation,
 			};
 			const updatedListNotes = [...listNotes];
 			updatedListNotes[index] = updatedNote;
@@ -65,7 +74,7 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 		if (id) {
 			updateNote(id, values);
 		} else {
-			const newNote = { ...values, id: Math.random(), eventType: eventType };
+			const newNote = { ...values, id: Math.random(), eventType: eventType, location: selectedLocation };
 			dispatch(setNotesList([...listNotes, newNote]));
 		}
 		closeModal();
@@ -87,6 +96,10 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 
 	const toggleOpen = () => {
 		setIsOpen(!isOpen);
+	};
+
+	const toggleModal = () => {
+		setOpenLocationModal(!openLocationModal)
 	};
 
 	return (
@@ -192,6 +205,15 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 										</TouchableOpacity>
 										{errors.endDate && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400, textAlign: 'right' }}>{errors.endDate}</Text> }
 									</SafeAreaView>
+									<View>
+										<TouchableOpacity onPress={() => setOpenLocationModal(true)} style={styles.locationContainer}>
+											<Text style={[styles.dateText, { color: theme.textColor }]}>{t('Add Location')}</Text>
+										</TouchableOpacity>
+										<View style={styles.locationContainer}>
+											<Image source={require('../assets/icons8-маркер-48.png')} style={{width: 24, height: 24}}/>
+											<Text style={styles.locationText}>{selectedLocation || values.location}</Text>
+										</View>
+									</View>
 									<View style={{marginTop: 30}}>
 										<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
 										<TextInput
@@ -202,9 +224,20 @@ export const ModalContent = ({closeModal, id, editTask}) => {
 											placeholderTextColor={theme.textColor}
 											placeholder={t("DescText")}
 										/>
-										<ErrorMessage name="description" component={Text} style={{ color: '#f11616', fontSize: 14, fontWeight: 400 }} />
 									</View>
 								</View>
+								<Modal
+									animationType="slide"
+									transparent={openLocationModal}
+									visible={openLocationModal}
+									onRequestClose={toggleModal}
+								>
+									<AddLocationPageModal
+										navigation={navigation}
+										closeModal={()=> setOpenLocationModal(false)}
+										onLocationSelect={handleLocationSelect}
+									/>
+								</Modal>
 								<TouchableOpacity onPress={handleSubmit} style={isValid ? styles.btnContainer : styles.btnContainerDisabled} disabled={!isValid}>
 										<Text style={styles.createBtnText}>{editTask? t('Update Task') : t('Add Task')}</Text>
 								</TouchableOpacity>
@@ -329,6 +362,16 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: 50,
 		backgroundColor: '#6435f5',
+		marginTop: 10,
+		width: '100%',
+		height: 60,
+	},
+	addLocationBtn: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 50,
+		backgroundColor: '#6435f5',
 		marginTop: 70,
 		width: '100%',
 		height: 60,
@@ -358,5 +401,16 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: 'bold',
 		color: '#762DD2',
+	},
+	locationContainer: {
+		display: 'flex',
+		alignItems: 'center',
+		flexDirection: 'row',
+		gap: 7,
+		marginTop: 20,
+	},
+	locationText: {
+		fontSize: 16,
+		fontWeight: 500,
 	}
 });

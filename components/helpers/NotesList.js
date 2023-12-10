@@ -12,7 +12,7 @@ import { ModalContent } from "../modal/ModalContent";
 import { formatDate } from "./helpers";
 import { ErrorData } from "../error/ErrorModal";
 
-export const NotesList = ({ listNotes }) => {
+export const NotesList = ({ listNotes, navigation }) => {
 	const [noteChecked, setNoteChecked] = useState(Array(listNotes.length).fill(false));
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [modalId, setModalId] = useState(null)
@@ -98,6 +98,7 @@ export const NotesList = ({ listNotes }) => {
 										closeModal={() => setModalVisible(false)}
 										id={modalId}
 										editTask
+										navigation={navigation}
 									/>
 								</Modal>
 							</TouchableOpacity>

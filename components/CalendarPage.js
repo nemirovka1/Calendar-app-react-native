@@ -113,7 +113,7 @@ export default function CalendarPage({ navigation }) {
 					visible={isModalVisible}
 					onRequestClose={toggleModal}
 				>
-					<ModalContent closeModal={()=> setModalVisible(false)}/>
+					<ModalContent closeModal={()=> setModalVisible(false)} navigation={navigation}/>
 				</Modal>
 			</View>
 		</SafeAreaView>
