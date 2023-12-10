@@ -14,7 +14,7 @@ export const AddLocationPageModal = ({closeModal, onLocationSelect}) => {
 
 	const [openConfirmModal, setOpenConfirmModal] = useState(false)
 	const [location, setLocation] = useState('')
-	Geocoding.init('AIzaSyBlaFpugAunMdCcfY1dle71rZD_wPHxR8Q')
+	Geocoding.init('My KEY')
 
 	const handleMapPress = (event) => {
 		console.log({event: event.currentTarget})
