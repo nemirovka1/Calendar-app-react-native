@@ -40,9 +40,9 @@ const styles = StyleSheet.create({
 	menuContainer: {
 		position: 'absolute',
 		top: '30%',
-		left: '10%',
+		left: '3%',
 		display: 'flex',
-		width: 320,
+		width: 300,
 		height: 330,
 		backgroundColor: '#3b24c7',
 		paddingTop: 10,

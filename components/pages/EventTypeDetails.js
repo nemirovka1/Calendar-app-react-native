@@ -67,7 +67,7 @@ export const EventTypeDetails = ({ navigation }) => {
 						style={styles.filterInput}
 						placeholder={ t("Type Task")}
 					/>
-					<Icon name="search" size={18} style={{ position: 'absolute', right: 30, top: 10 }} />
+					<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 6 }} />
 				</View>
 				<View style={styles.notesContainer}>
 					<NotesList listNotes={filterListNotes}/>
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
 		fontWeight: 500,
 	},
 	filterInput: {
-		padding: 8,
-		width: '80%',
+		padding: 9,
+		width: '75%',
 		borderRadius: 20,
 		backgroundColor: '#E5EAFC',
 	},

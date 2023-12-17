@@ -38,8 +38,10 @@ const styles = StyleSheet.create({
 	},
 	circle: {
 		width: 30,
-		height: 35,
+		height: 25,
 		borderRadius: 50,
+		display: 'flex',
+		textAlign: 'center',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},

@@ -3,7 +3,17 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../theme/ThemeContext";
 import { setNotesList } from "../store/slice";
-import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+	Image,
+	Modal,
+	SafeAreaView,
+	ScrollView,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	Vibration,
+	View
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import { darkTheme, lightTheme } from "../theme/theme";
@@ -26,6 +36,7 @@ export const NotesList = ({ listNotes, navigation }) => {
 		setModalVisible(!isModalVisible)
 	};
 	const toggleNoteCheck = (id) => {
+		Vibration.vibrate();
 		const updatedChecked = [...noteChecked]
 		updatedChecked[id] = !updatedChecked[id]
 		setNoteChecked(updatedChecked)
@@ -36,6 +47,7 @@ export const NotesList = ({ listNotes, navigation }) => {
 	};
 
 	const handleDeleteTask = async (id) => {
+		Vibration.vibrate();
 		const filterTasksList = listNotes.filter((el) => el.id !== id);
 		await dispatch(setNotesList(filterTasksList));
 	};

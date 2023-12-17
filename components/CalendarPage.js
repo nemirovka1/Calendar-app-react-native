@@ -1,16 +1,16 @@
-import React, { useState, useRef, useMemo, useContext } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import {
 	SafeAreaView,
 	StyleSheet,
 	View,
 	Text,
 	Modal,
-	Button,
-	TextInput, ImageBackground, TouchableOpacity,
+	ImageBackground,
+	TouchableOpacity,
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { ModalContent } from "./modal/ModalContent";
-import { footerComponent, formatDate, formatDateMarket, getCurrentDay } from "./helpers/helpers";
+import { footerComponent, formatDateMarket, getCurrentDay } from "./helpers/helpers";
 import { useSelector } from "react-redux";
 import { selectNotesList } from "./store/selectors";
 import { useTranslation } from "react-i18next";
@@ -75,11 +75,9 @@ export function CustomCalendar(props) {
 }
 
 export default function CalendarPage({ navigation }) {
-	const [selectedDate, setSelectedDate] = useState(getCurrentDay());
 	const [isModalVisible, setModalVisible] = useState(false)
-	const calendarRef = useRef(null);
 	const { t } = useTranslation()
-	const { theme, toggleTheme } = useContext(ThemeContext);
+	const { theme } = useContext(ThemeContext);
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible)
@@ -95,8 +93,7 @@ export default function CalendarPage({ navigation }) {
 					<View style={styles.container}>
 						<Text style={styles.text}> {t("Calendar")}</Text>
 						<View style={styles.calendarContainer}>
-							<CustomCalendar onDaySelect={(day) => console.log(`Date selected: ${day.dateString}`)}
-							/>
+							<CustomCalendar onDaySelect={(day) => console.log(`Date selected: ${day.dateString}`)}/>
 						</View>
 					</View>
 				</ImageBackground>
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
 	backgroundImg: {
 		display: 'flex',
 		width: '100%',
-		height: '85%',
+		height: '90%',
 		alignItems: 'center',
 	},
 	container: {
@@ -139,21 +136,19 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		textAlign: 'center',
-		fontSize: 42,
+		fontSize: 32,
 		fontWeight: "bold",
 		color: 'white',
-		marginTop: 35,
+		marginTop: 15,
 	},
 	calendarContainer: {
-		width: 420,
-		marginTop: 30,
+		width: 320,
 		justifyContent: 'center',
 	},
 	todayButton: {
 		textAlign: 'center',
 		fontSize: 20,
 		color: 'blue',
-		marginBottom: 10,
 	},
 	modal: {
 		justifyContent: 'center',
@@ -163,17 +158,19 @@ const styles = StyleSheet.create({
 		backgroundColor: '#413a39',
 	},
 	btnContainer: {
+		position: 'absolute',
+		bottom: 50,
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		borderRadius: 50,
+		borderRadius: 20,
 		backgroundColor: '#6435f5',
-		width: 350,
-		height: 60,
+		width: '90%',
+		height: 40,
 	},
 	createBtnText: {
 		textAlign: 'center',
-		fontSize: 22,
+		fontSize: 20,
 		fontWeight: 500,
 		color: 'white',
 	}

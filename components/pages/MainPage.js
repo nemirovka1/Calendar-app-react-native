@@ -39,8 +39,7 @@ export const MainPage = ({navigation}) => {
 	]
 	const [isMenuOpen, setMenuOpen] = useState(false);
 
-	const filteredNotes = sortedNotesList.filter(note =>
-		(note?.title?.toLowerCase())?.includes(searchText.toLowerCase()))
+	const filteredNotes = sortedNotesList.filter(note => (note?.title?.toLowerCase())?.includes(searchText.toLowerCase()))
 
 	const openMenu = () => {
 		setMenuOpen(true);
@@ -49,14 +48,13 @@ export const MainPage = ({navigation}) => {
 	const closeMenu = () => {
 		setMenuOpen(false);
 	};
-
 	return (
 			<SafeAreaView style={[styles.container, { backgroundColor: isMenuOpen? 'rgba(0, 0, 0, 0.4)': theme.backgroundColor }]}>
 				<TouchableOpacity onPress={openMenu} style={styles.settingsBox}>
 					<Image source={require("../assets/Group.png")} style={{width: 25, height: 20}}/>
 				</TouchableOpacity>
 				<SideMenu onClose={closeMenu} isOpen={isMenuOpen}/>
-				<View  style={styles.box}>
+				<View style={styles.box}>
 					<View style={styles.introBox}>
 						<Text style={[styles.titleText, { color: theme.textColor }]}>{t("Main Title")}</Text>
 						<Text style={[styles.dayTitle, { color: theme.textColor }]}>{formatDate(getCurrentDay(), t)}</Text>
@@ -74,8 +72,8 @@ export const MainPage = ({navigation}) => {
 									</ImageBackground>
 								</TouchableOpacity>
 							)}
-							sliderWidth={300}
-							itemWidth={220}
+							sliderWidth={250}
+							itemWidth={200}
 							onSnapToItem={(index) => setActiveSlide(index)}
 						/>
 						<Pagination
@@ -96,16 +94,25 @@ export const MainPage = ({navigation}) => {
 							value={searchText}
 							onChangeText={setSearchText}
 						/>
-						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 10 }} />
+						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 6 }} />
 					</View>
-					<NotesList listNotes={filteredNotes} navigation={navigation}/>
+					<View style={{height: 370}}>
+						<NotesList listNotes={filteredNotes} navigation={navigation}/>
+					</View>
 				</View>
-				{footerComponent(navigation)}
+				<View style={styles.footerBox}>
+					{footerComponent(navigation)}
+				</View>
 			</SafeAreaView>
 	)
 }
 
 const styles = StyleSheet.create({
+	footerBox: {
+		position: 'absolute',
+		alignItems: 'center',
+		bottom: 30,
+	},
 	container: {
 		display: 'flex',
 		alignItems: 'center',
@@ -138,13 +145,13 @@ const styles = StyleSheet.create({
 	},
 	backgroundImage: {
 		display: 'flex',
-		width: 250,
-		height: 250,
+		width: 220,
+		height: 220,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	categoryCardText: {
-		fontSize: 32,
+		fontSize: 28,
 		fontWeight: 600,
 		color: 'white',
 		textTransform: 'uppercase',

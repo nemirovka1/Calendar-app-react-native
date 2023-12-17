@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { View, Button, Modal } from "react-native";
+import { View, Button, Modal, Text, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import Geocoding from "react-native-geocoding";
 import { ConfirmLocationModal } from "../allerts/ConfirmLocationModal";
@@ -17,7 +17,6 @@ export const AddLocationPageModal = ({closeModal, onLocationSelect}) => {
 	Geocoding.init('My KEY')
 
 	const handleMapPress = (event) => {
-		console.log({event: event.currentTarget})
 		setMarkerCoords(event.nativeEvent.coordinate);
 	};
 	const handleSaveLocation = async () => {
@@ -55,6 +54,9 @@ export const AddLocationPageModal = ({closeModal, onLocationSelect}) => {
 	}
 	return (
 		<View style={{ flex: 1 }}>
+			<TouchableOpacity onPress={closeModal}>
+				<Text style={{ backgroundColor:"#ffff", color: 'black', fontSize: 18, textAlign: 'start',paddingTop: 30,paddingLeft: 10, paddingBottom: 10, fontWeight: 500}}>{t('Cancel')}</Text>
+			</TouchableOpacity>
 			<MapView
 				style={{ flex: 1 }}
 				provider={PROVIDER_GOOGLE}
@@ -72,12 +74,14 @@ export const AddLocationPageModal = ({closeModal, onLocationSelect}) => {
 			>
 				<Marker coordinate={markerCoords} />
 			</MapView>
-
-			<Button title={t('Save')} onPress={handleSaveLocation} />
+			<TouchableOpacity onPress={handleSaveLocation}>
+				<Text style={{ backgroundColor:"#762DD2", color: '#ffff', fontSize: 22, textAlign: 'center', padding: 15, fontWeight: 500}}>{t('Save')}</Text>
+			</TouchableOpacity>
 			<Modal
 				animationType="slide"
 				transparent={openConfirmModal}
 				visible={openConfirmModal}
+				onBackdropPress={closeModal}
 				onRequestClose={toogleModal}
 			>
 				<ConfirmLocationModal

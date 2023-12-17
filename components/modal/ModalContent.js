@@ -5,11 +5,12 @@ import {
 	StyleSheet,
 	Text,
 	TextInput,
-	TouchableOpacity,
+	TouchableOpacity, Vibration,
 	View
 } from "react-native";
 import React, { useContext, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { ErrorMessage, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotesList } from "../store/slice";
@@ -71,6 +72,7 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 	};
 
 	const handleSubmit = (values) => {
+		Vibration.vibrate()
 		if (id) {
 			updateNote(id, values);
 		} else {
@@ -80,14 +82,14 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 		closeModal();
 	};
 
-	const onChangeStartTime = (selectedDate, setFieldValue) => {
+	const onChangeStartTime = (event, selectedDate, setFieldValue) => {
 		if (selectedDate) {
 			setFieldValue('startDate', selectedDate);
 			setDatePickerStartVisibility(false);
 		}
 
 	};
-	const onChangeEndTime = (selectedDate, setFieldValue) => {
+	const onChangeEndTime = (event, selectedDate, setFieldValue) => {
 		if (selectedDate) {
 			setFieldValue('endDate', selectedDate);
 			setDatePickerEndVisibility(false)
@@ -123,37 +125,34 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 										<SafeAreaView style={styles.modalSection}>
 											<View style={styles.dropdownGender}>
 												<Text style={styles.textInputLabel}>{t("Category")}</Text>
-												<DropDownPicker
-													style={styles.picker}
-													open={isOpen}
-													setOpen={toggleOpen}
-													value={eventType}
-													items={[
-														{ label: t('Home'), value: 'home', color: 'green' },
-														{ label: t('Work'), value: 'work', color: 'orange' },
-														{ label: t('University'), value: 'university', color: 'red' },
-													]}
-													setValue={setEventType}
-													placeholderStyle={{
-														color: 'white',
-														fontSize: 16,
-													}}
-													topOffset={null}
-													placeholder={t( "Choose category" )}
-												/>
-												{(!eventType.length && !isValid) && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400 }}>Choose Category</Text> }
+													<DropDownPicker
+														style={styles.picker}
+														open={isOpen}
+														setOpen={toggleOpen}
+														value={eventType}
+														items={[
+															{ label: t('Home'), value: 'home', color: 'green' },
+															{ label: t('Work'), value: 'work', color: 'orange' },
+															{ label: t('University'), value: 'university', color: 'red' },
+														]}
+														setValue={setEventType}
+														placeholderStyle={{ color: 'white', fontSize: 16 }}
+														topOffset={null}
+														placeholder={t( "Choose category" )}
+													/>
+												{(!eventType.length && !isValid) && <Text style={{ color: '#f11616', fontSize: 12, fontWeight: 400 }}>Choose Category</Text>}
 											</View>
 											<SafeAreaView style={styles.modalContent}>
 												<Text style={styles.textInputLabel}>{t("Name")}</Text>
-												<TextInput
-													style={styles.textInput}
-													onChangeText={handleChange('title')}
-													onBlur={handleBlur('title')}
-													value={values.title}
-													placeholderTextColor={'white'}
-													placeholder={ t("Title")}
-												/>
-												<ErrorMessage name="title" component={Text} style={{ color: '#f11616', fontSize: 14, fontWeight: 400 }} />
+													<TextInput
+														style={styles.textInput}
+														onChangeText={handleChange('title')}
+														onBlur={handleBlur('title')}
+														value={values.title}
+														placeholderTextColor={'white'}
+														placeholder={ t("Title")}
+													/>
+												<ErrorMessage name="title" component={Text} style={{ color: '#f11616', fontSize: 12, fontWeight: 400 }} />
 												<View style={styles.separator} />
 											</SafeAreaView>
 										</SafeAreaView>
@@ -162,59 +161,63 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 							</ImageBackground>
 							<View style={[styles.modalSectionTime, { backgroundColor: theme.backgroundColor }]}>
 								<View>
-									<SafeAreaView style={{ gap: 10 }}>
+									<SafeAreaView style={{ gap: 5 }}>
 										<TouchableOpacity style={styles.dateBox}>
 											<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Starts")}</Text>
 											<SafeAreaView style={styles.timeBox}>
-												<TouchableOpacity onPress={()=> setDatePickerStartVisibility(true)}>
-													<Text style={styles.dateTitle}>{values.startDate ? `${formatDate(values.startDate, t)} - ${formatTime(values.startDate, t)}` : 'Select Date' }</Text>
-												</TouchableOpacity>
-												{isDatePickerStartVisible && (
-														<DateTimePickerModal
-															isVisible={isDatePickerStartVisible}
-															testID="startDateTimePicker"
-															value={values.startDate}
-															mode={'datetime'}
-															is24Hour={true}
-															onConfirm={(selectedDate) => onChangeStartTime(selectedDate, setFieldValue)}
-															onCancel={() => setDatePickerStartVisibility(false)}
-														/>
-													)}
+													<DateTimePicker
+														testID="startDateTimePicker"
+														value={values.startDate}
+														mode={'date'}
+														is24Hour={true}
+														style={styles.dateTimeBox}
+														onChange={(event, selectedDate) => onChangeStartTime(event, selectedDate, setFieldValue)}
+													/>
+													<DateTimePicker
+														testID="startDateTimePicker"
+														value={values.startDate}
+														mode={'time'}
+														is24Hour={true}
+														style={styles.dateTimeBox}
+														onChange={(event, selectedDate) => onChangeStartTime(event, selectedDate, setFieldValue)}
+													/>
 											</SafeAreaView>
-										</TouchableOpacity>
-										{errors.startDate && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400, textAlign: 'right' }}>{errors.startDate}</Text> }
+									</TouchableOpacity>
+										{errors.startDate && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400, textAlign: 'start' }}>{errors.startDate}</Text> }
 										<View style={styles.separator} />
-										<TouchableOpacity style={styles.dateBox}>
-											<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Ends")}</Text>
+									<TouchableOpacity style={styles.dateBox}>
+										<Text style={[styles.dateText, { color: theme.textColor }]}>{t("Ends")}</Text>
 											<SafeAreaView style={styles.timeBox}>
-												<TouchableOpacity onPress={()=> setDatePickerEndVisibility(true)}>
-													<Text style={styles.dateTitle}>{values.endDate ?  `${formatDate(values.endDate, t)} - ${formatTime(values.endDate, t)}` : 'Select Date' }</Text>
-												</TouchableOpacity>
-													{isDatePickerEndVisible && (
-														<DateTimePickerModal
-															isVisible={isDatePickerEndVisible}
-															testID="endDateTimePicker"
-															value={values.endDate}
-															mode={'datetime'}
-															is24Hour={true}
-															onConfirm={(selectedDate) => onChangeEndTime(selectedDate, setFieldValue)}
-															onCancel={() => setDatePickerEndVisibility(false)}
-														/>
-													)}
+												<DateTimePicker
+													testID="endDateTimePicker"
+													value={values.endDate}
+													mode={'date'}
+													is24Hour={true}
+													style={styles.dateTimeBox}
+													onChange={(event, selectedDate) => onChangeEndTime(event, selectedDate, setFieldValue)}
+												/>
+												<DateTimePicker
+													testID="endDateTimePicker"
+													value={values.endDate}
+													mode={'time'}
+													is24Hour={true}
+													style={styles.dateTimeBox}
+													onChange={(event, selectedDate) => onChangeEndTime(event, selectedDate, setFieldValue)}
+												/>
 											</SafeAreaView>
 										</TouchableOpacity>
-										{errors.endDate && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400, textAlign: 'right' }}>{errors.endDate}</Text> }
+										{errors.endDate && <Text style={{ color: '#f11616', fontSize: 14, fontWeight: 400, textAlign: 'start' }}>{errors.endDate}</Text> }
 									</SafeAreaView>
 									<View>
 										<TouchableOpacity onPress={() => setOpenLocationModal(true)} style={styles.locationContainer}>
 											<Text style={[styles.dateText, { color: theme.textColor }]}>{t('Add Location')}</Text>
 										</TouchableOpacity>
 										<View style={styles.locationContainer}>
-											<Image source={require('../assets/icons8-маркер-48.png')} style={{width: 24, height: 24}}/>
+											{selectedLocation ? <Image source={require('../assets/icons8-маркер-48.png')} style={{width: 24, height: 24}}/> : null}
 											<Text style={styles.locationText}>{selectedLocation || values.location}</Text>
 										</View>
 									</View>
-									<View style={{marginTop: 30}}>
+									<View style={{marginTop: 10}}>
 										<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
 										<TextInput
 											style={styles.textInputDesc}
@@ -292,11 +295,6 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		padding: 10,
 	},
-	textInputDesc:{
-		color: 'black',
-		fontSize: 18,
-		padding: 10,
-	},
 	separator: {
 		height: 0.7,
 		backgroundColor: '#e0d7d5',
@@ -309,25 +307,21 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
-	dateBtn: {
-		padding: 7,
-		backgroundColor: '#e0d7d5',
-		borderRadius: 8,
-	},
 	dateText: {
-		fontSize: 24,
+		fontSize: 22,
 		fontWeight: 'bold',
 		color: '#762DD2',
 	},
 	dropdownGender: {
 		display: 'flex',
-		gap: 16,
-		marginBottom: 20,
+		zIndex: 10000,
+		gap: 5,
 		borderWidth: 0,
 	},
 	picker: {
+		zIndex: 10000,
 		borderWidth: 0,
-		textDecorationColor: '#fff',
+		color: 'red',
 		backgroundColor: 'rgba(255, 255, 255, 0.1)',
 	},
 	placeholderStyles: {
@@ -336,6 +330,7 @@ const styles = StyleSheet.create({
 	timeBox:{
 		display: 'flex',
 		flexDirection: 'row',
+		backgroundColor: 'rgba(255, 255, 255, 0.1)',
 		gap: 10,
 	},
 	modalTitle: {
@@ -352,9 +347,8 @@ const styles = StyleSheet.create({
 		height: '100%',
 		width: '100%',
 		borderRadius: 20,
-		paddingTop: 35,
-		padding: 30,
-		backgroundColor: 'white',
+		padding: 10,
+		backgroundColor: '#e0d7d5',
 	},
 	btnContainer: {
 		display: 'flex',
@@ -382,7 +376,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: 50,
 		backgroundColor: 'gray',
-		marginTop: 70,
+		marginTop: 10,
 		width: '100%',
 		height: 60,
 	},
@@ -394,8 +388,8 @@ const styles = StyleSheet.create({
 	},
 	descriptionText: {
 		color: '#182965',
-		fontSize: 18,
-		marginBottom: 12
+		fontSize: 20,
+		marginBottom: 10,
 	},
 	dateTitle: {
 		fontSize: 18,
@@ -412,5 +406,9 @@ const styles = StyleSheet.create({
 	locationText: {
 		fontSize: 16,
 		fontWeight: 500,
+	},
+	dateTimeBox:{
+		borderRadius: 8,
 	}
+
 });

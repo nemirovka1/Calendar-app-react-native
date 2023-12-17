@@ -29,11 +29,11 @@ export const ConfirmLocationModal = ({closeModal, closeMapModal, location, onLoc
 const styles = StyleSheet.create({
 	modalContainer: {
 		flex: 1,
-		width: 400,
+		width: 300,
 		height: 250,
 		position: 'absolute',
 		top: '50%',
-		left: '50%',
+		left: 210,
 		marginLeft: -200,
 		marginTop: -170,
 		borderRadius: 20,
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		gap: 15,
+		borderRadius: 10,
 	},
 	btnContainer: {
 		display: "flex",
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
 	selectedLocation: {
 		padding: 8,
 		backgroundColor: 'rgba(255, 255, 255, 0.3)',
-		borderRadius: 10,
+		borderRadius: 9,
 		fontSize: 16,
 		fontWeight: 500,
 		color: '#fff',

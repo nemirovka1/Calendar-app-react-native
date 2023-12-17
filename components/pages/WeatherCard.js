@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
 		height: '55%',
 		display: 'flex',
 		alignItems: 'center',
-		padding: 10,
 	},
 	title: {
 		textAlign: 'center',
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'rgba(255,255,255, 0.2)',
 		width: '100%',
 		height: '100%',
-		padding: 20,
+		padding: 10,
 		borderRadius: 40,
 	},
 	weatherContainer: {
@@ -72,13 +71,15 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-evenly',
         borderRadius: 10,
-		padding: 3,
+		padding: 10,
+		gap: 10,
 		width: '100%',
 		backgroundColor: 'rgba(255,255,255, 0.2)',
 	},
 	weatherText: {
+		textAlign: 'center',
 		color: '#fff',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 500,
 	},
 	imageBox: {

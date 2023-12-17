@@ -40,17 +40,17 @@ export const SideMenu = ({ isOpen, onClose }) => {
 const styles = StyleSheet.create({
 	menuContainer: {
 		display: 'flex',
-		width: 262,
+		width: 200,
 		height: '100%',
 		backgroundColor: '#5F3FF7',
-		paddingTop: 10,
+		paddingTop: 60,
 		borderTopRightRadius: 20,
 		borderBottomEndRadius: 20,
 	},
 	closeButton: {
 		position: 'absolute',
 		right: 5,
-		top: 2,
+		top: 25,
 		fontWeight: 900,
 		color: '#fff',
 	},
@@ -67,13 +67,13 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	imageLogo: {
-		width: 262,
-		height: 262,
+		width: 202,
+		height: 162,
 	},
 	bottomText: {
 		position: 'absolute',
-		bottom: 0,
-		right: 40,
+		bottom: 10,
+	    textAlign: "center",
 		color: '#fff',
 		padding: 10,
 	},

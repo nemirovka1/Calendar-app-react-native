@@ -78,25 +78,25 @@ export const footerComponent = (navigation) => {
 			justifyContent: 'center',
 			alignItems: 'center',
 			flexDirection: 'row',
-			gap: 50,
+			gap: 30,
 		}}>
 			<TouchableOpacity onPress={() => navigation.navigate('Main')}>
 				<Image source={
 					currentRouteName === 'Main'?
 						require('../assets/home_alt_fill.png')
-						: require('../assets/home-icon.png') } style={{width: 50, height: 50}}/>
+						: require('../assets/home-icon.png') } style={{width: 30, height: 30}}/>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={()=> navigation.navigate('Calendar')}>
 				<Image source={currentRouteName === 'Calendar'?
 					require('../assets/calendar-selecteed.png')
 					: require('../assets/calendar-gray.png')
-				} style={{width: 40, height: 40}}/>
+				} style={{width: 25, height: 25}}/>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={()=> navigation.navigate('Weather')}>
 				<Image source={currentRouteName === 'Weather'?
 					require('../assets/iselected-clouds.png')
 					: require('../assets/gray-cloud.png')
-				} style={{width: 50, height: 50}}/>
+				} style={{width: 30, height: 30}}/>
 			</TouchableOpacity>
 		</View>
 	)

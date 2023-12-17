@@ -1,4 +1,4 @@
-import { FlatList, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { FlatList, View, Text, StyleSheet, TouchableOpacity, Vibration } from "react-native";
 import { useState } from "react";
 import { FormItem } from "./FormItem";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
@@ -31,11 +31,16 @@ export const ListItems = () => {
 	}
 
 	const rightSwipe = () => {
+
 		return (
 			<View>
 				<Text>delete</Text>
 			</View>
 		)
+	}
+
+	const handleDeleteNotes = (id) => {
+		deleteNotes(id)
 	}
 	return (
 		<View>
@@ -45,7 +50,7 @@ export const ListItems = () => {
 				renderItem={({item}) => (
 					<GestureHandlerRootView>
 						<Swipeable renderLeftActions={leftSwipe}>
-							<TouchableOpacity onPress={() => deleteNotes(item.key)}>
+							<TouchableOpacity onPress={()=>handleDeleteNotes(item.key)}>
 								<Text style={styles.text}>{item.text}</Text>
 							</TouchableOpacity>
 						</Swipeable>
