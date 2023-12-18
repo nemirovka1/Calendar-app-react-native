@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
 import { ThemeSwitcher } from "../i18n/ThemeSwitcher";
 import { useTranslation } from "react-i18next";
+import QRCodeGenerator from "../QrCode";
 
 export const SideMenu = ({ isOpen, onClose }) => {
 	const { t } = useTranslation()
+	const [openModal, setOpenModal] = useState(false)
 
+	const toggleModal = () => {
+		setOpenModal(!openModal)
+	}
 	return (
 		<Modal
 			animationType="slide"
@@ -30,7 +35,18 @@ export const SideMenu = ({ isOpen, onClose }) => {
 						<ThemeSwitcher/>
 					</View>
 
+					<Modal
+						animationType="slide"
+						transparent={openModal}
+						visible={openModal}
+						onRequestClose={toggleModal}
+					>
+						<QRCodeGenerator closeModal={()=> setOpenModal( false )}/>
+					</Modal>
 				</View>
+				<TouchableOpacity onPress={()=> setOpenModal( true)} style={{ position: 'absolute', bottom: 30, justifyContent: 'center'}}>
+					<Text style={styles.bottomText}> Scan Me !</Text>
+				</TouchableOpacity>
 				<Text style={styles.bottomText}> © 2023 ANT.Version 1.0</Text>
 			</View>
 		</Modal>
@@ -51,6 +67,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		right: 5,
 		top: 25,
+		fontSize: 20,
 		fontWeight: 900,
 		color: '#fff',
 	},

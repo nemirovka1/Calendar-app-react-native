@@ -12,12 +12,13 @@ import {
 } from "react-native"
 import { footerComponent, formatDate, getCurrentDay } from "../helpers/helpers"
 import Carousel, { Pagination } from "react-native-snap-carousel"
-import { useContext, useState } from "react"
+import React, { useContext, useState } from "react"
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { useTranslation } from "react-i18next"
 import { ThemeContext } from "../theme/ThemeContext"
 import { NotesList } from "../helpers/NotesList"
 import { SideMenu } from "../drawer/CustomDrawer"
+import QRCodeGenerator from "../QrCode";
 
 export const MainPage = ({navigation}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -48,61 +49,64 @@ export const MainPage = ({navigation}) => {
 	const closeMenu = () => {
 		setMenuOpen(false);
 	};
+
 	return (
 			<SafeAreaView style={[styles.container, { backgroundColor: isMenuOpen? 'rgba(0, 0, 0, 0.4)': theme.backgroundColor }]}>
-				<TouchableOpacity onPress={openMenu} style={styles.settingsBox}>
-					<Image source={require("../assets/Group.png")} style={{width: 25, height: 20}}/>
-				</TouchableOpacity>
-				<SideMenu onClose={closeMenu} isOpen={isMenuOpen}/>
-				<View style={styles.box}>
-					<View style={styles.introBox}>
-						<Text style={[styles.titleText, { color: theme.textColor }]}>{t("Main Title")}</Text>
-						<Text style={[styles.dayTitle, { color: theme.textColor }]}>{formatDate(getCurrentDay(), t)}</Text>
+					<TouchableOpacity onPress={openMenu} style={styles.settingsBox}>
+						<Image source={require("../assets/Group.png")} style={{width: 25, height: 20}}/>
+					</TouchableOpacity>
+					<SideMenu onClose={closeMenu} isOpen={isMenuOpen}/>
+					<View style={styles.box}>
+						<View style={styles.introBox}>
+							<Text style={[styles.titleText, { color: theme.textColor }]}>{t("Main Title")}</Text>
+							<Text style={[styles.dayTitle, { color: theme.textColor }]}>{formatDate(getCurrentDay(), t)}</Text>
+						</View>
+						<View style={styles.categoryBox}>
+							<Carousel
+								data={cardsList}
+								renderItem={({ item }) => (
+									<TouchableOpacity onPress={()=> navigation.navigate('DetailsEvent', {label: item.label})}>
+										<ImageBackground
+											source={require('../assets/Card.png')}
+											style={styles.backgroundImage}
+										>
+											<Text style={styles.categoryCardText}>{item.label}</Text>
+										</ImageBackground>
+									</TouchableOpacity>
+								)}
+								sliderWidth={250}
+								itemWidth={200}
+								onSnapToItem={(index) => setActiveSlide(index)}
+							/>
+							<Pagination
+								dotsLength={cardsList.length}
+								activeDotIndex={activeSlide}
+								containerStyle={styles.paginationContainer}
+								dotStyle={styles.paginationDot}
+								inactiveDotStyle={styles.paginationDot}
+								inactiveDotOpacity={0.4}
+								inactiveDotScale={0.6}
+							/>
+						</View>
+						<View style={styles.filterContainer}>
+							<Text style={[styles.filterText, { color: theme.textColor }]}>{t("Tasks")}</Text>
+							<TextInput
+								style={styles.filterInput}
+								placeholder={t("Type Task")}
+								value={searchText}
+								onChangeText={setSearchText}
+							/>
+							<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 6 }} />
+						</View>
+
+						<View style={{height: 370}}>
+							<NotesList listNotes={filteredNotes} navigation={navigation}/>
+
+						</View>
 					</View>
-					<View style={styles.categoryBox}>
-						<Carousel
-							data={cardsList}
-							renderItem={({ item }) => (
-								<TouchableOpacity onPress={()=> navigation.navigate('DetailsEvent', {label: item.label})}>
-									<ImageBackground
-										source={require('../assets/Card.png')}
-										style={styles.backgroundImage}
-									>
-										<Text style={styles.categoryCardText}>{item.label}</Text>
-									</ImageBackground>
-								</TouchableOpacity>
-							)}
-							sliderWidth={250}
-							itemWidth={200}
-							onSnapToItem={(index) => setActiveSlide(index)}
-						/>
-						<Pagination
-							dotsLength={cardsList.length}
-							activeDotIndex={activeSlide}
-							containerStyle={styles.paginationContainer}
-							dotStyle={styles.paginationDot}
-							inactiveDotStyle={styles.paginationDot}
-							inactiveDotOpacity={0.4}
-							inactiveDotScale={0.6}
-						/>
+					<View style={styles.footerBox}>
+						{footerComponent(navigation)}
 					</View>
-					<View style={styles.filterContainer}>
-						<Text style={[styles.filterText, { color: theme.textColor }]}>{t("Tasks")}</Text>
-						<TextInput
-							style={styles.filterInput}
-							placeholder={t("Type Task")}
-							value={searchText}
-							onChangeText={setSearchText}
-						/>
-						<Icon name="search" size={18} style={{ position: 'absolute', right: 20, top: 6 }} />
-					</View>
-					<View style={{height: 370}}>
-						<NotesList listNotes={filteredNotes} navigation={navigation}/>
-					</View>
-				</View>
-				<View style={styles.footerBox}>
-					{footerComponent(navigation)}
-				</View>
 			</SafeAreaView>
 	)
 }

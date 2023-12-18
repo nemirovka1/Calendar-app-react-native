@@ -21,6 +21,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, formatTime } from "../helpers/helpers";
 import { validationSchema } from "./validationSchema";
 import { AddLocationPageModal } from "../pages/LocationPage";
+import QRCodeGenerator from "../QrCode";
 
 export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -38,8 +39,12 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 	};
 
 	let initialValues;
+	let qrData;
+
 	if (id) {
 		const filterListNotes = listNotes.find((el) => el.id === id);
+		qrData = JSON.stringify(filterListNotes.title);
+
 		initialValues = {
 			title: filterListNotes.title,
 			description: filterListNotes.description,
@@ -71,8 +76,11 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 		}
 	};
 
+
 	const handleSubmit = (values) => {
 		Vibration.vibrate()
+
+
 		if (id) {
 			updateNote(id, values);
 		} else {
@@ -104,18 +112,20 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 		setOpenLocationModal(!openLocationModal)
 	};
 
+
 	return (
 		<View style={styles.modalContainer}>
-				<Formik
+			<Formik
 					initialValues={initialValues}
 					validationSchema={validationSchema}
 					onSubmit={handleSubmit}
 				>
 					{({ handleChange, handleBlur, handleSubmit, values, setFieldValue, isValid, errors}) => (
 						<View style={{width: '100%', height: '100%' }}>
+
 							<ImageBackground source={require('../assets/CalendarBacground.png')} style={styles.bgcImage}>
 								<SafeAreaView style={styles.container}>
-									<View style={{width: '100%', padding: 20}}>
+									<View style={{width: '100%', padding: 10}}>
 										<View style={styles.managementBtn}>
 											<TouchableOpacity onPress={closeModal}>
 												<Text style={styles.btnTitle}>{t("Cancel")}</Text>
@@ -217,7 +227,7 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 											<Text style={styles.locationText}>{selectedLocation || values.location}</Text>
 										</View>
 									</View>
-									<View style={{marginTop: 10}}>
+									<View>
 										<Text style={[styles.descriptionText, { color: theme.textColor }]}>{t("Description")}</Text>
 										<TextInput
 											style={styles.textInputDesc}
@@ -229,6 +239,7 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 										/>
 									</View>
 								</View>
+								{listNotes.length ? <QRCodeGenerator qrData={qrData}/> : null}
 								<Modal
 									animationType="slide"
 									transparent={openLocationModal}
@@ -246,7 +257,7 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 								</TouchableOpacity>
 							</View>
 						</View>
-					)}
+						)}
 				</Formik>
 		</View>
 
@@ -260,7 +271,7 @@ const styles = StyleSheet.create({
 	},
 	bgcImage: {
 		width: '100%',
-		paddingBottom: 30,
+		paddingBottom: 10,
 	},
 	text: {
 		padding: 20,
@@ -273,7 +284,6 @@ const styles = StyleSheet.create({
 		width: '100%',
 	},
 	modalSection: {
-		marginTop: 5,
 		padding: 5,
 		gap: 10,
 		borderRadius: 8,
@@ -293,7 +303,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		color: '#fff',
 		fontSize: 18,
-		padding: 10,
+		padding: 8,
 	},
 	separator: {
 		height: 0.7,
@@ -308,7 +318,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	dateText: {
-		fontSize: 22,
+		fontSize: 20,
 		fontWeight: 'bold',
 		color: '#762DD2',
 	},
@@ -401,7 +411,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flexDirection: 'row',
 		gap: 7,
-		marginTop: 20,
+		marginTop: 10,
 	},
 	locationText: {
 		fontSize: 16,

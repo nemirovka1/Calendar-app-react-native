@@ -14,7 +14,7 @@ export const AddLocationPageModal = ({closeModal, onLocationSelect}) => {
 
 	const [openConfirmModal, setOpenConfirmModal] = useState(false)
 	const [location, setLocation] = useState('')
-	Geocoding.init('My KEY')
+	Geocoding.init('AIzaSyBlaFpugAunMdCcfY1dle71rZD_wPHxR8Q')
 
 	const handleMapPress = (event) => {
 		setMarkerCoords(event.nativeEvent.coordinate);
