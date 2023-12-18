@@ -17,11 +17,8 @@ import { setNotesList } from "../store/slice";
 import { selectNotesList } from "../store/selectors";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../theme/ThemeContext";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, formatTime } from "../helpers/helpers";
 import { validationSchema } from "./validationSchema";
 import { AddLocationPageModal } from "../pages/LocationPage";
-import QRCodeGenerator from "../QrCode";
 
 export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 	const listNotes = useSelector(selectNotesList)
@@ -39,12 +36,9 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 	};
 
 	let initialValues;
-	let qrData;
 
 	if (id) {
 		const filterListNotes = listNotes.find((el) => el.id === id);
-		qrData = JSON.stringify(filterListNotes.title);
-
 		initialValues = {
 			title: filterListNotes.title,
 			description: filterListNotes.description,
