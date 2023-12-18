@@ -239,7 +239,6 @@ export const ModalContent = ({closeModal, id, editTask, navigation}) => {
 										/>
 									</View>
 								</View>
-								{listNotes.length ? <QRCodeGenerator qrData={qrData}/> : null}
 								<Modal
 									animationType="slide"
 									transparent={openLocationModal}
